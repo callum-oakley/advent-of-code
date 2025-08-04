@@ -149,6 +149,15 @@ impl IntoChar for &Turn {
     }
 }
 
+impl IntoChar for &str {
+    fn into_char(self) -> char {
+        let mut chars = self.chars();
+        let c = chars.next().unwrap();
+        assert!(chars.next().is_none());
+        c
+    }
+}
+
 pub fn scan(s: &str) -> impl Iterator<Item = (Vector, char)> + '_ {
     let mut v = Z;
     s.chars().filter_map(move |c| {
