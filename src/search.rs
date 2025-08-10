@@ -2,7 +2,6 @@ use std::{
     cmp::{Ordering, Reverse},
     collections::{BinaryHeap, HashSet, VecDeque},
     hash::Hash,
-    iter,
     ops::Add,
 };
 
@@ -78,7 +77,7 @@ where
     }
 }
 
-/// A filter that prunes the tree whenever we encounter a state with a hash key we've already seen.
+/// Prunes the search space whenever we encounter a state with a hash key we've already seen.
 pub fn hash_filter<S, H, K>(mut hash_key: H) -> impl FnMut(&S) -> bool
 where
     H: FnMut(&S) -> K,
@@ -96,12 +95,12 @@ where
     }
 }
 
-/// A filter that prunes the tree whenever we encounter a state we've already seen.
+/// Prunes the search space whenever we encounter a state we've already seen.
 pub fn id_filter<S: Clone + Eq + Hash>() -> impl FnMut(&S) -> bool {
     hash_filter(Clone::clone)
 }
 
-/// A filter that doesn't prune the tree at all.
+/// Doesn't prune the search space at all.
 pub fn no_filter<S>(_: &S) -> bool {
     true
 }
@@ -118,7 +117,7 @@ where
     F: FnMut(&S) -> bool,
 {
     queue.push(start);
-    iter::from_fn(move || {
+    std::iter::from_fn(move || {
         while let Some(state) = queue.pop() {
             if filter(&state) {
                 adjacent(&state, &mut |a| queue.push(a));

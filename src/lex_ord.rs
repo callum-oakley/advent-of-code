@@ -22,7 +22,7 @@ where
     for<'a> &'a T: IntoIterator,
     for<'a> <&'a T as IntoIterator>::Item: Ord,
 {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+    fn cmp(&self, other: &Self) -> Ordering {
         let mut self_it = self.0.into_iter();
         let mut other_it = other.0.into_iter();
         loop {
