@@ -21,6 +21,7 @@ mod number_theory;
 mod ocr;
 mod part;
 mod search;
+mod sexp;
 mod unbounded_vec;
 mod uniq;
 mod vm_2018;

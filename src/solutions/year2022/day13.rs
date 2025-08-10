@@ -1,73 +1,29 @@
-use std::{cmp::Ordering, iter::Peekable, str::Chars};
+use std::cmp::Ordering;
 
-#[derive(PartialEq, Eq, Clone)]
-enum Packet {
-    Int(u8),
-    List(Vec<Packet>),
+use crate::sexp::Value;
+
+fn parse(input: &str) -> Vec<Value> {
+    input
+        .lines()
+        .filter(|line| !line.trim().is_empty())
+        .map(|line| line.parse().unwrap())
+        .collect()
 }
 
-impl PartialOrd for Packet {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-impl Ord for Packet {
-    fn cmp(&self, other: &Self) -> Ordering {
-        match (self, other) {
-            (Packet::Int(a), Packet::Int(b)) => a.cmp(b),
-            (Packet::Int(a), _) => Packet::List(vec![Packet::Int(*a)]).cmp(other),
-            (_, Packet::Int(b)) => self.cmp(&Packet::List(vec![Packet::Int(*b)])),
-            (Packet::List(a), Packet::List(b)) => {
-                let mut a_it = a.iter();
-                let mut b_it = b.iter();
-                loop {
-                    match (a_it.next(), b_it.next()) {
-                        (None, None) => return Ordering::Equal,
-                        (None, Some(_)) => return Ordering::Less,
-                        (Some(_), None) => return Ordering::Greater,
-                        (Some(a), Some(b)) => match a.cmp(b) {
-                            Ordering::Equal => continue,
-                            o => return o,
-                        },
-                    }
-                }
-            }
-        }
-    }
-}
-
-fn parse(input: &str) -> Vec<Packet> {
-    parse_packets(&mut input.chars().peekable())
-}
-
-fn parse_packets(chars: &mut Peekable<Chars>) -> Vec<Packet> {
-    let mut packets = Vec::new();
-    while let Some(packet) = parse_packet(chars) {
-        packets.push(packet);
-    }
-    packets
-}
-
-fn parse_packet(chars: &mut Peekable<Chars>) -> Option<Packet> {
-    while chars.peek().is_some_and(|&c| c.is_whitespace() || c == ',') {
-        chars.next();
-    }
-    match chars.peek() {
-        Some('[') => {
-            chars.next();
-            let packet = Packet::List(parse_packets(chars));
-            assert_eq!(chars.next(), Some(']'));
-            Some(packet)
-        }
-        Some('0'..='9') => {
-            let mut n = String::new();
-            while chars.peek().is_some_and(char::is_ascii_digit) {
-                n.push(chars.next().unwrap());
-            }
-            Some(Packet::Int(n.parse().unwrap()))
-        }
-        _ => None,
+fn compare(a: &Value, b: &Value) -> Ordering {
+    match (a.is_int(), b.is_int()) {
+        (true, true) => a.unint().cmp(&b.unint()),
+        (true, false) => compare(&Value::from([a]), b),
+        (false, true) => compare(a, &Value::from([b])),
+        (false, false) => match (a.is_nil(), b.is_nil()) {
+            (true, true) => Ordering::Equal,
+            (true, false) => Ordering::Less,
+            (false, true) => Ordering::Greater,
+            (false, false) => match compare(a.head(), b.head()) {
+                Ordering::Equal => compare(a.tail(), b.tail()),
+                o => o,
+            },
+        },
     }
 }
 
@@ -75,30 +31,45 @@ pub fn part1(input: &str) -> usize {
     parse(input)
         .chunks(2)
         .enumerate()
-        .filter(|(_, pair)| pair[0] <= pair[1])
+        .filter(|(_, pair)| compare(&pair[0], &pair[1]) != Ordering::Greater)
         .map(|(i, _)| i + 1)
         .sum()
 }
 
 pub fn part2(input: &str) -> usize {
     let mut packets = parse(input);
-    let dividers = parse("[[2]] [[6]]");
+    let dividers = ["[[2]]".parse().unwrap(), "[[6]]".parse().unwrap()];
     packets.extend(dividers.clone());
-    packets.sort_unstable();
+    packets.sort_unstable_by(compare);
     (packets.iter().position(|p| p == &dividers[0]).unwrap() + 1)
         * (packets.iter().position(|p| p == &dividers[1]).unwrap() + 1)
 }
 
 pub fn tests() {
     let example = "
-        [1,1,3,1,1] [1,1,5,1,1]
-        [[1],[2,3,4]] [[1],4]
-        [9] [[8,7,6]]
-        [[4,4],4,4] [[4,4],4,4,4]
-        [7,7,7,7] [7,7,7]
-        [] [3]
-        [[[]]] [[]]
-        [1,[2,[3,[4,[5,6,7]]]],8,9] [1,[2,[3,[4,[5,6,0]]]],8,9]
+        [1,1,3,1,1]
+        [1,1,5,1,1]
+
+        [[1],[2,3,4]]
+        [[1],4]
+
+        [9]
+        [[8,7,6]]
+
+        [[4,4],4,4]
+        [[4,4],4,4,4]
+
+        [7,7,7,7]
+        [7,7,7]
+
+        []
+        [3]
+
+        [[[]]]
+        [[]]
+
+        [1,[2,[3,[4,[5,6,7]]]],8,9]
+        [1,[2,[3,[4,[5,6,0]]]],8,9]
     ";
     assert_eq!(part1(example), 13);
     assert_eq!(part2(example), 140);

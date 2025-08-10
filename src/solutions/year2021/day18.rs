@@ -1,160 +1,101 @@
-use std::{ops::Add, rc::Rc};
+use crate::sexp::Value;
 
-#[derive(Clone)]
-enum NumberInner {
-    Lit(u8),
-    Pair(Number, Number),
+fn parse(input: &str) -> impl Iterator<Item = Value> {
+    input.trim().lines().map(|line| line.parse().unwrap())
 }
 
-#[derive(Clone)]
-struct Number {
-    inner: Rc<NumberInner>,
+fn pair(a: &Value, b: &Value) -> Value {
+    Value::from([a, b])
 }
 
-impl Number {
-    fn lit(lit: u8) -> Self {
-        Self {
-            inner: Rc::new(NumberInner::Lit(lit)),
+fn explode(value: &Value) -> Option<Value> {
+    fn add_leftmost(value: &Value, carry: i32) -> Value {
+        if value.is_int() {
+            Value::int(value.unint() + carry)
+        } else {
+            pair(&add_leftmost(&value[0], carry), &value[1])
         }
     }
 
-    fn unwrap_lit(&self) -> u8 {
-        match self.inner.as_ref() {
-            NumberInner::Lit(lit) => *lit,
-            NumberInner::Pair(_, _) => panic!("not a literal"),
+    fn add_rightmost(value: &Value, carry: i32) -> Value {
+        if value.is_int() {
+            Value::int(value.unint() + carry)
+        } else {
+            pair(&value[0], &add_rightmost(&value[1], carry))
         }
     }
 
-    fn pair(left: Self, right: Self) -> Self {
-        Self {
-            inner: Rc::new(NumberInner::Pair(left, right)),
+    fn go(value: &Value, depth: u8) -> Option<(i32, Value, i32)> {
+        if value.is_int() {
+            None
+        } else if depth == 4 {
+            Some((value[0].unint(), Value::int(0), value[1].unint()))
+        } else {
+            go(&value[0], depth + 1)
+                .map(|(left_carry, v, right_carry)| {
+                    (
+                        left_carry,
+                        pair(&v, &add_leftmost(&value[1], right_carry)),
+                        0,
+                    )
+                })
+                .or_else(|| {
+                    go(&value[1], depth + 1).map(|(left_carry, v, right_carry)| {
+                        (
+                            0,
+                            pair(&add_rightmost(&value[0], left_carry), &v),
+                            right_carry,
+                        )
+                    })
+                })
         }
     }
 
-    fn parse(s: &str) -> Self {
-        fn go(chars: &mut impl Iterator<Item = char>) -> Number {
-            match chars.next().unwrap() {
-                '[' => {
-                    let left = go(chars);
-                    assert_eq!(chars.next(), Some(','));
-                    let right = go(chars);
-                    assert_eq!(chars.next(), Some(']'));
-                    Number::pair(left, right)
-                }
-                c => Number::lit(c.to_digit(10).unwrap().try_into().unwrap()),
-            }
-        }
-        go(&mut s.trim().chars())
-    }
+    go(value, 0).map(|(_, value, _)| value)
+}
 
-    fn explode(&self) -> Option<Self> {
-        fn add_leftmost(n: &Number, carry: u8) -> Number {
-            match n.inner.as_ref() {
-                NumberInner::Lit(lit) => Number::lit(lit + carry),
-                NumberInner::Pair(left, right) => {
-                    Number::pair(add_leftmost(left, carry), right.clone())
-                }
-            }
+fn split(value: &Value) -> Option<Value> {
+    if value.is_int() {
+        let int = value.unint();
+        if int >= 10 {
+            Some(pair(&Value::int(int / 2), &Value::int(int - int / 2)))
+        } else {
+            None
         }
-
-        fn add_rightmost(n: &Number, carry: u8) -> Number {
-            match n.inner.as_ref() {
-                NumberInner::Lit(lit) => Number::lit(lit + carry),
-                NumberInner::Pair(left, right) => {
-                    Number::pair(left.clone(), add_rightmost(right, carry))
-                }
-            }
-        }
-
-        fn go(n: &Number, depth: u8) -> Option<(u8, Number, u8)> {
-            match n.inner.as_ref() {
-                NumberInner::Lit(_) => None,
-                NumberInner::Pair(left, right) => {
-                    if depth == 4 {
-                        Some((left.unwrap_lit(), Number::lit(0), right.unwrap_lit()))
-                    } else {
-                        go(left, depth + 1)
-                            .map(|(left_carry, n, right_carry)| {
-                                (
-                                    left_carry,
-                                    Number::pair(n, add_leftmost(right, right_carry)),
-                                    0,
-                                )
-                            })
-                            .or_else(|| {
-                                go(right, depth + 1).map(|(left_carry, n, right_carry)| {
-                                    (
-                                        0,
-                                        Number::pair(add_rightmost(left, left_carry), n),
-                                        right_carry,
-                                    )
-                                })
-                            })
-                    }
-                }
-            }
-        }
-
-        go(self, 0).map(|(_, n, _)| n)
-    }
-
-    fn split(&self) -> Option<Self> {
-        match self.inner.as_ref() {
-            &NumberInner::Lit(lit) => {
-                if lit >= 10 {
-                    Some(Number::pair(
-                        Number::lit(lit / 2),
-                        Number::lit(lit - lit / 2),
-                    ))
-                } else {
-                    None
-                }
-            }
-            NumberInner::Pair(left, right) => {
-                if let Some(n) = left.split() {
-                    Some(Number::pair(n, right.clone()))
-                } else {
-                    left.split()
-                        .map(|n| Number::pair(n, right.clone()))
-                        .or_else(|| right.split().map(|n| Number::pair(left.clone(), n)))
-                }
-            }
-        }
-    }
-
-    fn magnitude(&self) -> u32 {
-        match self.inner.as_ref() {
-            NumberInner::Lit(lit) => u32::from(*lit),
-            NumberInner::Pair(left, right) => 3 * left.magnitude() + 2 * right.magnitude(),
-        }
+    } else if let Some(v) = split(&value[0]) {
+        Some(pair(&v, &value[1]))
+    } else {
+        split(&value[0])
+            .map(|v| pair(&v, &value[1]))
+            .or_else(|| split(&value[1]).map(|v| pair(&value[0], &v)))
     }
 }
 
-impl Add for Number {
-    type Output = Number;
-
-    fn add(self, other: Self) -> Self::Output {
-        let mut res = Self::pair(self, other);
-        while let Some(n) = res.explode().or_else(|| res.split()) {
-            res = n;
-        }
-        res
+fn magnitude(value: &Value) -> i32 {
+    if value.is_int() {
+        value.unint()
+    } else {
+        3 * magnitude(&value[0]) + 2 * magnitude(&value[1])
     }
 }
 
-fn parse(input: &str) -> impl Iterator<Item = Number> {
-    input.trim().lines().map(Number::parse)
+fn add(a: &Value, b: &Value) -> Value {
+    let mut value = pair(a, b);
+    while let Some(v) = explode(&value).or_else(|| split(&value)) {
+        value = v;
+    }
+    value
 }
 
-pub fn part1(input: &str) -> u32 {
-    parse(input).reduce(|a, b| a + b).unwrap().magnitude()
+pub fn part1(input: &str) -> i32 {
+    magnitude(&parse(input).reduce(|a, b| add(&a, &b)).unwrap())
 }
 
-pub fn part2(input: &str) -> u32 {
+pub fn part2(input: &str) -> i32 {
     let numbers: Vec<_> = parse(input).collect();
     numbers
         .iter()
-        .flat_map(|a| numbers.iter().map(|b| (a.clone() + b.clone()).magnitude()))
+        .flat_map(|a| numbers.iter().map(|b| magnitude(&add(a, b))))
         .max()
         .unwrap()
 }
