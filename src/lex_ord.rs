@@ -31,9 +31,8 @@ where
                 (None, Some(_)) => return Ordering::Less,
                 (Some(_), None) => return Ordering::Greater,
                 (Some(a), Some(b)) => match a.cmp(&b) {
-                    Ordering::Less => return Ordering::Less,
-                    Ordering::Greater => return Ordering::Greater,
-                    Ordering::Equal => {}
+                    Ordering::Equal => continue,
+                    o => return o,
                 },
             }
         }
