@@ -1,53 +1,58 @@
-use crate::sexp::Value;
+use crate::sexp::{Inner, Value};
 
 fn parse(input: &str) -> impl Iterator<Item = Value> {
     input.trim().lines().map(|line| line.parse().unwrap())
 }
 
-fn pair(a: &Value, b: &Value) -> Value {
-    Value::from([a, b])
+fn pair(a: Value, b: Value) -> Value {
+    Value::vec(vec![a, b])
 }
 
 fn explode(value: &Value) -> Option<Value> {
     fn add_leftmost(value: &Value, carry: i32) -> Value {
-        if value.is_int() {
-            Value::int(value.unint() + carry)
-        } else {
-            pair(&add_leftmost(&value[0], carry), &value[1])
+        match value.as_inner() {
+            Inner::Int(int) => Value::int(int + carry),
+            Inner::Vec(values) => pair(add_leftmost(&values[0], carry), values[1].clone()),
         }
     }
 
     fn add_rightmost(value: &Value, carry: i32) -> Value {
-        if value.is_int() {
-            Value::int(value.unint() + carry)
-        } else {
-            pair(&value[0], &add_rightmost(&value[1], carry))
+        match value.as_inner() {
+            Inner::Int(int) => Value::int(int + carry),
+            Inner::Vec(values) => pair(values[0].clone(), add_rightmost(&values[1], carry)),
         }
     }
 
     fn go(value: &Value, depth: u8) -> Option<(i32, Value, i32)> {
-        if value.is_int() {
-            None
-        } else if depth == 4 {
-            Some((value[0].unint(), Value::int(0), value[1].unint()))
-        } else {
-            go(&value[0], depth + 1)
-                .map(|(left_carry, v, right_carry)| {
-                    (
-                        left_carry,
-                        pair(&v, &add_leftmost(&value[1], right_carry)),
-                        0,
-                    )
-                })
-                .or_else(|| {
-                    go(&value[1], depth + 1).map(|(left_carry, v, right_carry)| {
-                        (
-                            0,
-                            pair(&add_rightmost(&value[0], left_carry), &v),
-                            right_carry,
-                        )
-                    })
-                })
+        match value.as_inner() {
+            Inner::Int(_) => None,
+            Inner::Vec(values) => {
+                if depth == 4 {
+                    Some((
+                        values[0].as_int().unwrap(),
+                        Value::int(0),
+                        values[1].as_int().unwrap(),
+                    ))
+                } else {
+                    go(&values[0], depth + 1)
+                        .map(|(left_carry, v, right_carry)| {
+                            (
+                                left_carry,
+                                pair(v, add_leftmost(&values[1], right_carry)),
+                                0,
+                            )
+                        })
+                        .or_else(|| {
+                            go(&values[1], depth + 1).map(|(left_carry, v, right_carry)| {
+                                (
+                                    0,
+                                    pair(add_rightmost(&values[0], left_carry), v),
+                                    right_carry,
+                                )
+                            })
+                        })
+                }
+            }
         }
     }
 
@@ -55,31 +60,34 @@ fn explode(value: &Value) -> Option<Value> {
 }
 
 fn split(value: &Value) -> Option<Value> {
-    if value.is_int() {
-        let int = value.unint();
-        if int >= 10 {
-            Some(pair(&Value::int(int / 2), &Value::int(int - int / 2)))
-        } else {
-            None
+    match value.as_inner() {
+        Inner::Int(int) => {
+            if *int >= 10 {
+                Some(pair(Value::int(int / 2), Value::int(int - int / 2)))
+            } else {
+                None
+            }
         }
-    } else if let Some(v) = split(&value[0]) {
-        Some(pair(&v, &value[1]))
-    } else {
-        split(&value[0])
-            .map(|v| pair(&v, &value[1]))
-            .or_else(|| split(&value[1]).map(|v| pair(&value[0], &v)))
+        Inner::Vec(values) => {
+            if let Some(v) = split(&values[0]) {
+                Some(pair(v, values[1].clone()))
+            } else {
+                split(&values[0])
+                    .map(|v| pair(v, values[1].clone()))
+                    .or_else(|| split(&values[1]).map(|v| pair(values[0].clone(), v)))
+            }
+        }
     }
 }
 
 fn magnitude(value: &Value) -> i32 {
-    if value.is_int() {
-        value.unint()
-    } else {
-        3 * magnitude(&value[0]) + 2 * magnitude(&value[1])
+    match value.as_inner() {
+        Inner::Int(int) => *int,
+        Inner::Vec(values) => 3 * magnitude(&values[0]) + 2 * magnitude(&values[1]),
     }
 }
 
-fn add(a: &Value, b: &Value) -> Value {
+fn add(a: Value, b: Value) -> Value {
     let mut value = pair(a, b);
     while let Some(v) = explode(&value).or_else(|| split(&value)) {
         value = v;
@@ -88,14 +96,14 @@ fn add(a: &Value, b: &Value) -> Value {
 }
 
 pub fn part1(input: &str) -> i32 {
-    magnitude(&parse(input).reduce(|a, b| add(&a, &b)).unwrap())
+    magnitude(&parse(input).reduce(add).unwrap())
 }
 
 pub fn part2(input: &str) -> i32 {
-    let numbers: Vec<_> = parse(input).collect();
-    numbers
+    let values: Vec<_> = parse(input).collect();
+    values
         .iter()
-        .flat_map(|a| numbers.iter().map(|b| magnitude(&add(a, b))))
+        .flat_map(|a| values.iter().map(|b| magnitude(&add(a.clone(), b.clone()))))
         .max()
         .unwrap()
 }

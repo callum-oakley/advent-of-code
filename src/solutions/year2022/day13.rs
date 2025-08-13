@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 
-use crate::sexp::Value;
+use crate::sexp::{Inner, Value};
 
 fn parse(input: &str) -> Vec<Value> {
     input
@@ -11,19 +11,25 @@ fn parse(input: &str) -> Vec<Value> {
 }
 
 fn compare(a: &Value, b: &Value) -> Ordering {
-    match (a.is_int(), b.is_int()) {
-        (true, true) => a.unint().cmp(&b.unint()),
-        (true, false) => compare(&Value::from([a]), b),
-        (false, true) => compare(a, &Value::from([b])),
-        (false, false) => match (a.is_nil(), b.is_nil()) {
-            (true, true) => Ordering::Equal,
-            (true, false) => Ordering::Less,
-            (false, true) => Ordering::Greater,
-            (false, false) => match compare(a.head(), b.head()) {
-                Ordering::Equal => compare(a.tail(), b.tail()),
-                o => o,
-            },
-        },
+    match (a.as_inner(), b.as_inner()) {
+        (Inner::Int(a), Inner::Int(b)) => a.cmp(b),
+        (Inner::Int(_), Inner::Vec(_)) => compare(&Value::vec(vec![a.clone()]), b),
+        (Inner::Vec(_), Inner::Int(_)) => compare(a, &Value::vec(vec![b.clone()])),
+        (Inner::Vec(a), Inner::Vec(b)) => {
+            let mut a = a.iter();
+            let mut b = b.iter();
+            loop {
+                match (a.next(), b.next()) {
+                    (None, None) => return Ordering::Equal,
+                    (None, Some(_)) => return Ordering::Less,
+                    (Some(_), None) => return Ordering::Greater,
+                    (Some(a), Some(b)) => match compare(a, b) {
+                        Ordering::Equal => continue,
+                        o => return o,
+                    },
+                }
+            }
+        }
     }
 }
 
