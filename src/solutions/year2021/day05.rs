@@ -10,16 +10,10 @@ fn parse(input: &str) -> impl Iterator<Item = (Vector, Vector)> + '_ {
     })
 }
 
-fn line_segment(s: Vector, t: Vector) -> impl Iterator<Item = Vector> {
-    let len = (t - s).abs().max();
-    let dir = (t - s) / len;
-    (0..=len).map(move |i| s + i * dir)
-}
-
 pub fn part1(input: &str) -> usize {
     parse(input)
         .filter(|&(s, t)| s.x == t.x || s.y == t.y)
-        .flat_map(|(s, t)| line_segment(s, t))
+        .flat_map(|(s, t)| crate::grid::line_segment(s, t))
         .freqs()
         .values()
         .filter(|&&f| f >= 2)
@@ -28,7 +22,7 @@ pub fn part1(input: &str) -> usize {
 
 pub fn part2(input: &str) -> usize {
     parse(input)
-        .flat_map(|(s, t)| line_segment(s, t))
+        .flat_map(|(s, t)| crate::grid::line_segment(s, t))
         .freqs()
         .values()
         .filter(|&&f| f >= 2)

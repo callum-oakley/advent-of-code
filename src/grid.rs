@@ -56,6 +56,12 @@ pub fn reading_ord_key(v: Vector) -> [i32; 2] {
     [v.y, v.x]
 }
 
+pub fn line_segment(s: Vector, t: Vector) -> impl Iterator<Item = Vector> {
+    let len = (t - s).abs().max();
+    let dir = (t - s) / len;
+    (0..=len).map(move |i| s + i * dir)
+}
+
 pub trait IntoVector<T, const D: usize> {
     fn into_vector(self) -> SVector<T, D>;
 }
