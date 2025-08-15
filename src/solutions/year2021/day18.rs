@@ -9,21 +9,21 @@ fn pair(a: Value, b: Value) -> Value {
 }
 
 fn explode(value: &Value) -> Option<Value> {
-    fn add_leftmost(value: &Value, carry: i32) -> Value {
+    fn add_leftmost(value: &Value, carry: i64) -> Value {
         match value.as_inner() {
             Inner::Int(int) => Value::int(int + carry),
             Inner::Vec(values) => pair(add_leftmost(&values[0], carry), values[1].clone()),
         }
     }
 
-    fn add_rightmost(value: &Value, carry: i32) -> Value {
+    fn add_rightmost(value: &Value, carry: i64) -> Value {
         match value.as_inner() {
             Inner::Int(int) => Value::int(int + carry),
             Inner::Vec(values) => pair(values[0].clone(), add_rightmost(&values[1], carry)),
         }
     }
 
-    fn go(value: &Value, depth: u8) -> Option<(i32, Value, i32)> {
+    fn go(value: &Value, depth: u8) -> Option<(i64, Value, i64)> {
         match value.as_inner() {
             Inner::Int(_) => None,
             Inner::Vec(values) => {
@@ -80,7 +80,7 @@ fn split(value: &Value) -> Option<Value> {
     }
 }
 
-fn magnitude(value: &Value) -> i32 {
+fn magnitude(value: &Value) -> i64 {
     match value.as_inner() {
         Inner::Int(int) => *int,
         Inner::Vec(values) => 3 * magnitude(&values[0]) + 2 * magnitude(&values[1]),
@@ -95,11 +95,11 @@ fn add(a: Value, b: Value) -> Value {
     value
 }
 
-pub fn part1(input: &str) -> i32 {
+pub fn part1(input: &str) -> i64 {
     magnitude(&parse(input).reduce(add).unwrap())
 }
 
-pub fn part2(input: &str) -> i32 {
+pub fn part2(input: &str) -> i64 {
     let values: Vec<_> = parse(input).collect();
     values
         .iter()

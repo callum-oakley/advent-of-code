@@ -9,7 +9,7 @@ use anyhow::{Error, Result, bail, ensure};
 
 #[derive(Clone, PartialEq, Eq)]
 pub enum Inner {
-    Int(i32),
+    Int(i64),
     Vec(Vec<Value>),
 }
 
@@ -18,7 +18,7 @@ pub enum Inner {
 pub struct Value(Rc<Inner>);
 
 impl Value {
-    pub fn int(int: i32) -> Self {
+    pub fn int(int: i64) -> Self {
         Value(Rc::new(Inner::Int(int)))
     }
 
@@ -30,7 +30,7 @@ impl Value {
         self.0.as_ref()
     }
 
-    pub fn as_int(&self) -> Option<i32> {
+    pub fn as_int(&self) -> Option<i64> {
         match self.as_inner() {
             Inner::Int(int) => Some(*int),
             Inner::Vec(_) => None,
