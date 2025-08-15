@@ -20,7 +20,7 @@ fn parse(input: &str) -> (Grid<bool>, Vector) {
     (grid, start.unwrap())
 }
 
-fn run(grid: &Grid<bool>, start: Vector) -> HashMap<Vector, i32> {
+fn run(grid: &Grid<bool>, start: Vector) -> HashMap<Vector, i64> {
     search::breadth_first(
         (start, 0),
         |&(pos, picoseconds), push| {
@@ -35,7 +35,7 @@ fn run(grid: &Grid<bool>, start: Vector) -> HashMap<Vector, i32> {
     .collect()
 }
 
-fn cheats(track: &HashMap<Vector, i32>, max_duration: i32) -> impl Iterator<Item = i32> + '_ {
+fn cheats(track: &HashMap<Vector, i64>, max_duration: i64) -> impl Iterator<Item = i64> + '_ {
     track
         .keys()
         .flat_map(|&a| track.keys().map(move |&b| (a, b, (b - a).abs().sum())))

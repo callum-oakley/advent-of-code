@@ -17,15 +17,15 @@ fn into_hex_vector(s: &str) -> Vector {
     }
 }
 
-fn hex_dist(v: Vector) -> i32 {
+fn hex_dist(v: Vector) -> i64 {
     (v.x.abs() + v.y.abs() + (v.x + v.y).abs()) / 2
 }
 
-pub fn part1(input: &str) -> i32 {
+pub fn part1(input: &str) -> i64 {
     hex_dist(input.split(',').map(into_hex_vector).sum::<Vector>())
 }
 
-pub fn part2(input: &str) -> i32 {
+pub fn part2(input: &str) -> i64 {
     let mut furthest = 0;
     let mut v = Z;
     for step in input.split(',').map(into_hex_vector) {

@@ -6,8 +6,8 @@ use crate::grid::{self, Grid, Vector, E, S};
 
 enum Instruction {
     Rect(Vector),
-    RotRow { y: i32, by: i32 },
-    RotCol { x: i32, by: i32 },
+    RotRow { y: i64, by: i64 },
+    RotCol { x: i64, by: i64 },
 }
 
 fn parse(input: &str) -> impl Iterator<Item = Instruction> + '_ {

@@ -23,7 +23,7 @@ fn parse(input: &str) -> Vec<Reading> {
 }
 
 // Cheating a little by assuming there are no gaps. This turns out to be true.
-fn part1_(y: i32, input: &str) -> usize {
+fn part1_(y: i64, input: &str) -> usize {
     let readings = parse(input);
     let min_x = readings
         .iter()
@@ -82,7 +82,7 @@ fn boundary_points(a: Reading, b: Reading) -> impl Iterator<Item = Vector> {
 
 // Since we know there is a unique solution it must be on the boundary of two sensors (one unit
 // further away than the detected beacon) otherwise nearby points would also be valid solutions.
-fn part2_(bound: i32, input: &str) -> i64 {
+fn part2_(bound: i64, input: &str) -> i64 {
     let readings = parse(input);
     let v = crate::combinatorics::combinations(2, &readings)
         .flat_map(|pair| boundary_points(*pair[0], *pair[1]))
@@ -93,8 +93,7 @@ fn part2_(bound: i32, input: &str) -> i64 {
                 })
         })
         .unwrap();
-    // TODO make Vector i64 by default?
-    i64::from(v.x) * 4_000_000 + i64::from(v.y)
+    v.x * 4_000_000 + v.y
 }
 
 pub fn part1(input: &str) -> usize {

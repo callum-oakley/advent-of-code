@@ -3,12 +3,12 @@ use crate::{
     part::Part,
 };
 
-fn cell(serial: i32, pos: Vector) -> i32 {
+fn cell(serial: i64, pos: Vector) -> i64 {
     ((pos.x + 10) * pos.y + serial) * (pos.x + 10) / 100 % 10 - 5
 }
 
 // https://en.wikipedia.org/wiki/Summed-area_table
-fn summed_area_table(serial: i32) -> Grid<i32> {
+fn summed_area_table(serial: i64) -> Grid<i64> {
     let mut res = Grid::new(0, [301, 301]);
     for x in 1..=300 {
         for y in 1..=300 {
@@ -19,14 +19,14 @@ fn summed_area_table(serial: i32) -> Grid<i32> {
     res
 }
 
-fn square(sat: &Grid<i32>, pos: Vector, size: i32) -> i32 {
+fn square(sat: &Grid<i64>, pos: Vector, size: i64) -> i64 {
     let base = pos + NW;
     sat[base] + sat[base + Vector::new(size, size)]
         - sat[base + Vector::new(size, 0)]
         - sat[base + Vector::new(0, size)]
 }
 
-fn part_(part: Part, input: &str) -> (Vector, i32) {
+fn part_(part: Part, input: &str) -> (Vector, i64) {
     let sat = summed_area_table(input.parse().unwrap());
     (match part {
         Part::One => 3..=3,

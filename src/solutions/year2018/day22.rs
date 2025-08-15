@@ -29,8 +29,8 @@ fn compatible(tile: Tile, tool: Tool) -> bool {
     }
 }
 
-impl From<i32> for Tile {
-    fn from(erosion: i32) -> Self {
+impl From<i64> for Tile {
+    fn from(erosion: i64) -> Self {
         match erosion % 3 {
             0 => Tile::Rocky,
             1 => Tile::Wet,
@@ -41,13 +41,13 @@ impl From<i32> for Tile {
 }
 
 struct Cave {
-    depth: i32,
+    depth: i64,
     target: Vector,
-    erosion_cache: RefCell<HashMap<Vector, i32>>,
+    erosion_cache: RefCell<HashMap<Vector, i64>>,
 }
 
 impl Cave {
-    fn erosion(&self, pos: Vector) -> i32 {
+    fn erosion(&self, pos: Vector) -> i64 {
         if let Some(&res) = self.erosion_cache.borrow().get(&pos) {
             return res;
         }
@@ -79,7 +79,7 @@ fn parse(input: &str) -> Cave {
 struct State {
     pos: Vector,
     tool: Tool,
-    mins: i32,
+    mins: i64,
 }
 
 impl State {
@@ -111,7 +111,7 @@ impl State {
     }
 }
 
-pub fn part1(input: &str) -> i32 {
+pub fn part1(input: &str) -> i64 {
     let cave = parse(input);
     let mut res = 0;
     for y in 0..=cave.target.y {
@@ -122,7 +122,7 @@ pub fn part1(input: &str) -> i32 {
     res
 }
 
-pub fn part2(input: &str) -> i32 {
+pub fn part2(input: &str) -> i64 {
     let cave = parse(input);
     let target = cave.target;
     search::a_star(

@@ -7,7 +7,7 @@ use crate::grid::{IntoVector, Vector};
 #[derive(Clone, Copy)]
 struct Fold {
     axis: usize,
-    offset: i32,
+    offset: i64,
 }
 
 fn parse(input: &str) -> (HashSet<Vector>, impl Iterator<Item = Fold> + '_) {

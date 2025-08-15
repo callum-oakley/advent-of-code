@@ -50,7 +50,7 @@ pub fn part1(input: &str) -> u32 {
     areas.into_values().max().unwrap()
 }
 
-fn part2_(tolerance: i32, input: &str) -> u32 {
+fn part2_(tolerance: i64, input: &str) -> u32 {
     let coordinates = input
         .lines()
         .map(IntoVector::into_vector)
@@ -65,7 +65,7 @@ fn part2_(tolerance: i32, input: &str) -> u32 {
             if coordinates
                 .iter()
                 .map(|&c| (pos - c).abs().sum())
-                .sum::<i32>()
+                .sum::<i64>()
                 < tolerance
             {
                 res += 1;

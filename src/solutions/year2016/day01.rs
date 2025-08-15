@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use crate::grid::{IntoTurn, Turn, N, Z};
 
-fn parse(input: &str) -> impl Iterator<Item = (Turn, i32)> + '_ {
+fn parse(input: &str) -> impl Iterator<Item = (Turn, i64)> + '_ {
     input.split(", ").map(|instruction| {
         (
             instruction[0..1].into_turn(),
@@ -11,7 +11,7 @@ fn parse(input: &str) -> impl Iterator<Item = (Turn, i32)> + '_ {
     })
 }
 
-pub fn part1(input: &str) -> i32 {
+pub fn part1(input: &str) -> i64 {
     parse(input)
         .fold((Z, N), |(pos, dir), (turn, dist)| {
             let dir = turn * dir;
@@ -22,7 +22,7 @@ pub fn part1(input: &str) -> i32 {
         .sum()
 }
 
-pub fn part2(input: &str) -> i32 {
+pub fn part2(input: &str) -> i64 {
     let mut pos = Z;
     let mut dir = N;
     let mut visited = HashSet::from([Z]);

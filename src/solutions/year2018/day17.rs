@@ -8,9 +8,9 @@ fn parse(input: &str) -> HashSet<Vector> {
     let re = Regex::new(r"(x|y)=(\d+), (x|y)=(\d+)\.\.(\d+)").unwrap();
     re.captures_iter(input)
         .flat_map(|captures| {
-            let fixed: i32 = captures[2].parse().unwrap();
-            let start: i32 = captures[4].parse().unwrap();
-            let end: i32 = captures[5].parse().unwrap();
+            let fixed: i64 = captures[2].parse().unwrap();
+            let start: i64 = captures[4].parse().unwrap();
+            let end: i64 = captures[5].parse().unwrap();
             (start..=end).map(move |v| match (&captures[1], &captures[3]) {
                 ("x", "y") => Vector::new(fixed, v),
                 ("y", "x") => Vector::new(v, fixed),

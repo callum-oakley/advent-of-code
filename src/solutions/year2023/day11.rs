@@ -1,6 +1,6 @@
 use crate::grid::{self, Bounds, Vector};
 
-fn parse(expansion: i32, input: &str) -> Vec<Vector> {
+fn parse(expansion: i64, input: &str) -> Vec<Vector> {
     let mut galaxies: Vec<_> = grid::scan(input)
         .filter(|&(_, c)| c == '#')
         .map(|(pos, _)| pos)
@@ -27,12 +27,12 @@ fn parse(expansion: i32, input: &str) -> Vec<Vector> {
     galaxies
 }
 
-fn part_(expansion: i32, input: &str) -> i64 {
+fn part_(expansion: i64, input: &str) -> i64 {
     let galaxies = parse(expansion, input);
     let mut res = 0;
     for i in 0..galaxies.len() {
         for j in i + 1..galaxies.len() {
-            res += i64::from((galaxies[j] - galaxies[i]).abs().sum());
+            res += (galaxies[j] - galaxies[i]).abs().sum();
         }
     }
     res

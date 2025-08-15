@@ -19,7 +19,7 @@ fn parse(input: &str) -> impl Iterator<Item = Motion> {
 
 fn follow(head: Vector, tail: Vector) -> Vector {
     if (head - tail).abs().max() > 1 {
-        tail + (head - tail).map(i32::signum)
+        tail + (head - tail).map(i64::signum)
     } else {
         tail
     }

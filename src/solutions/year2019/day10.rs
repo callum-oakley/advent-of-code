@@ -20,7 +20,10 @@ fn parse(input: &str) -> Vec<Vector> {
 // Note that this is shifted from the usual definition used in polar coordinates because it makes
 // the problem easier.
 fn theta(asteroid: Vector) -> OrderedFloat<f64> {
-    OrderedFloat(-f64::atan2(asteroid.x.into(), asteroid.y.into()))
+    OrderedFloat(-f64::atan2(
+        i32::try_from(asteroid.x).unwrap().into(),
+        i32::try_from(asteroid.y).unwrap().into(),
+    ))
 }
 
 fn count_visible(asteroids: &[Vector], origin: Vector) -> usize {
@@ -45,7 +48,7 @@ pub fn part1(input: &str) -> usize {
     count_visible(&asteroids, origin(&asteroids))
 }
 
-pub fn part2(input: &str) -> i32 {
+pub fn part2(input: &str) -> i64 {
     let mut asteroids = parse(input);
     let origin = origin(&asteroids);
 

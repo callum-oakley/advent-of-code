@@ -42,7 +42,7 @@ fn hits(target: Bounds<2>, mut probe: Probe) -> bool {
     false
 }
 
-fn max_height(probe: Probe) -> i32 {
+fn max_height(probe: Probe) -> i64 {
     probe.vel.y * (probe.vel.y - 1) / 2
 }
 
@@ -58,7 +58,7 @@ fn part_(input: &str) -> impl Iterator<Item = Probe> {
         .filter(move |&probe| hits(target, probe))
 }
 
-pub fn part1(input: &str) -> i32 {
+pub fn part1(input: &str) -> i64 {
     part_(input).map(max_height).max().unwrap()
 }
 

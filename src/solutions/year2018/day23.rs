@@ -8,8 +8,8 @@ use crate::{
 
 #[derive(Copy, Clone)]
 struct Bot {
-    pos: Vector3<i32>,
-    r: i32,
+    pos: Vector3<i64>,
+    r: i64,
 }
 
 fn parse(input: &str) -> Vec<Bot> {
@@ -24,8 +24,8 @@ fn parse(input: &str) -> Vec<Bot> {
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 struct Cube {
-    pos: Vector3<i32>,
-    w: i32,
+    pos: Vector3<i64>,
+    w: i64,
 }
 
 impl Cube {
@@ -67,7 +67,7 @@ pub fn part1(input: &str) -> usize {
 // cubes of half the width, and choosing one. Let the "cost" of a cube be the number of bots which
 // DON'T intersect with it, then this cost always increases along any path, and the problem reduces
 // to finding a lowest cost path to a cube of width 1.
-pub fn part2(input: &str) -> i32 {
+pub fn part2(input: &str) -> i64 {
     let bots = parse(input);
     let bounds = Bounds::new(bots.iter().map(|bot| bot.pos));
     search::dijkstra(

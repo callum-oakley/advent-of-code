@@ -30,7 +30,7 @@ fn part_(garden: &Grid<bool>, start: Vector, max_steps: usize) -> usize {
         |state, push| {
             if state.steps < max_steps {
                 for pos in state.pos.adjacent4() {
-                    if garden[pos.zip_map(&garden.size, i32::rem_euclid)] {
+                    if garden[pos.zip_map(&garden.size, i64::rem_euclid)] {
                         push(State {
                             pos,
                             steps: state.steps + 1,

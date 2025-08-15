@@ -46,7 +46,7 @@ fn tilt(platform: &mut Grid<Tile>, dir: Vector) {
     }
 }
 
-fn score(platform: &Grid<Tile>) -> i32 {
+fn score(platform: &Grid<Tile>) -> i64 {
     platform
         .iter()
         .filter(|&(_, &tile)| tile == Tile::Ball)
@@ -54,13 +54,13 @@ fn score(platform: &Grid<Tile>) -> i32 {
         .sum()
 }
 
-pub fn part1(input: &str) -> i32 {
+pub fn part1(input: &str) -> i64 {
     let mut platform = parse(input);
     tilt(&mut platform, N);
     score(&platform)
 }
 
-pub fn part2(input: &str) -> i32 {
+pub fn part2(input: &str) -> i64 {
     fn spin(platform: &mut Grid<Tile>) {
         for dir in [N, W, S, E] {
             tilt(platform, dir);

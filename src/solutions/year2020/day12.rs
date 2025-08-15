@@ -3,7 +3,7 @@ use crate::{
     part::Part,
 };
 
-fn part_(part: Part, input: &str) -> i32 {
+fn part_(part: Part, input: &str) -> i64 {
     let mut pos = Z;
     let mut dir = match part {
         Part::One => E,
@@ -11,7 +11,7 @@ fn part_(part: Part, input: &str) -> i32 {
     };
     for line in input.lines() {
         let c = line.chars().next().unwrap();
-        let n: i32 = line[1..].parse().unwrap();
+        let n: i64 = line[1..].parse().unwrap();
         match c {
             'N' | 'E' | 'S' | 'W' => match part {
                 Part::One => pos += n * c.into_vector(),
@@ -25,11 +25,11 @@ fn part_(part: Part, input: &str) -> i32 {
     pos.abs().sum()
 }
 
-pub fn part1(input: &str) -> i32 {
+pub fn part1(input: &str) -> i64 {
     part_(Part::One, input)
 }
 
-pub fn part2(input: &str) -> i32 {
+pub fn part2(input: &str) -> i64 {
     part_(Part::Two, input)
 }
 

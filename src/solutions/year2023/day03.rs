@@ -20,12 +20,12 @@ fn parse(input: &str) -> (HashMap<Vector, char>, Vec<Label>) {
         .lines()
         .enumerate()
         .flat_map(|(y, line)| {
-            let y = i32::try_from(y).unwrap();
+            let y = i64::try_from(y).unwrap();
             num.find_iter(line).map(move |m| Label {
                 val: m.as_str().parse().unwrap(),
                 covers: (m.start()..m.end())
                     .flat_map(|x| {
-                        let x = i32::try_from(x).unwrap();
+                        let x = i64::try_from(x).unwrap();
                         [x, y].adjacent8()
                     })
                     .collect(),

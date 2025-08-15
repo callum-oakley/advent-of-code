@@ -7,7 +7,7 @@ use crate::grid::{IntoVector, Vector, E, N, S, W, Z};
 static RE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"([UDLR]) (\d+) \(#([0-9a-f]{5})([0-3])\)").unwrap());
 
-fn parse1(input: &str) -> impl Iterator<Item = (Vector, i32)> + '_ {
+fn parse1(input: &str) -> impl Iterator<Item = (Vector, i64)> + '_ {
     RE.captures_iter(input).map(|captures| {
         (
             captures[1].chars().next().unwrap().into_vector(),
@@ -16,7 +16,7 @@ fn parse1(input: &str) -> impl Iterator<Item = (Vector, i32)> + '_ {
     })
 }
 
-fn parse2(input: &str) -> impl Iterator<Item = (Vector, i32)> + '_ {
+fn parse2(input: &str) -> impl Iterator<Item = (Vector, i64)> + '_ {
     RE.captures_iter(input).map(|captures| {
         (
             match &captures[4] {
@@ -26,26 +26,25 @@ fn parse2(input: &str) -> impl Iterator<Item = (Vector, i32)> + '_ {
                 "3" => N,
                 _ => unreachable!(),
             },
-            i32::from_str_radix(&captures[3], 16).unwrap(),
+            i64::from_str_radix(&captures[3], 16).unwrap(),
         )
     })
 }
 
-fn part_(input: impl Iterator<Item = (Vector, i32)>) -> i64 {
+fn part_(input: impl Iterator<Item = (Vector, i64)>) -> i64 {
     let mut pos = Z;
     let mut boundary = vec![pos];
     let mut boundary_len = 0;
     for (dir, side_len) in input {
         pos += dir * side_len;
         boundary.push(pos);
-        boundary_len += i64::from(side_len);
+        boundary_len += side_len;
     }
 
     // https://en.wikipedia.org/wiki/Shoelace_formula
     let mut area = 0;
     for i in 0..boundary.len() - 1 {
-        area += i64::from(boundary[i].y + boundary[i + 1].y)
-            * i64::from(boundary[i].x - boundary[i + 1].x);
+        area += (boundary[i].y + boundary[i + 1].y) * (boundary[i].x - boundary[i + 1].x);
     }
     area /= 2;
 

@@ -1,12 +1,12 @@
-use nalgebra::{vector, Vector2};
+use nalgebra::vector;
 
-use crate::grid::IntoVector;
+use crate::grid::{IntoVector, Vector};
 
 #[derive(Clone, Copy)]
 struct Machine {
-    a: Vector2<i64>,
-    b: Vector2<i64>,
-    prize: Vector2<i64>,
+    a: Vector,
+    b: Vector,
+    prize: Vector,
 }
 
 fn parse(input: &str) -> impl Iterator<Item = Machine> + '_ {

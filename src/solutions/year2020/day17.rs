@@ -4,7 +4,7 @@ use nalgebra::SVector;
 
 use crate::{grid::Grid, uniq::Uniq};
 
-fn neighbors<const D: usize>(v: SVector<i32, D>) -> Vec<SVector<i32, D>> {
+fn neighbors<const D: usize>(v: SVector<i64, D>) -> Vec<SVector<i64, D>> {
     let mut res = vec![v];
     for axis in 0..v.len() {
         let dir = SVector::from_fn(|i, _| (i == axis).into());
@@ -17,7 +17,7 @@ fn neighbors<const D: usize>(v: SVector<i32, D>) -> Vec<SVector<i32, D>> {
     res
 }
 
-fn part_<const D: usize>(mut active: HashSet<SVector<i32, D>>) -> usize {
+fn part_<const D: usize>(mut active: HashSet<SVector<i64, D>>) -> usize {
     for _ in 0..6 {
         active = active
             .iter()

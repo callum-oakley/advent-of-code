@@ -6,7 +6,7 @@ fn parse(input: &str) -> impl Iterator<Item = Grid<bool>> + '_ {
         .map(|pattern| Grid::parse(pattern, |_, c| c == '#'))
 }
 
-fn ver_asymmetry(pattern: &Grid<bool>, x: i32) -> usize {
+fn ver_asymmetry(pattern: &Grid<bool>, x: i64) -> usize {
     let mut before = x - 1;
     let mut after = x;
     let mut res = 0;
@@ -22,7 +22,7 @@ fn ver_asymmetry(pattern: &Grid<bool>, x: i32) -> usize {
     res
 }
 
-fn hor_asymmetry(pattern: &Grid<bool>, y: i32) -> usize {
+fn hor_asymmetry(pattern: &Grid<bool>, y: i64) -> usize {
     let mut before = y - 1;
     let mut after = y;
     let mut res = 0;
@@ -38,7 +38,7 @@ fn hor_asymmetry(pattern: &Grid<bool>, y: i32) -> usize {
     res
 }
 
-fn part_(target_asymmetry: usize, input: &str) -> i32 {
+fn part_(target_asymmetry: usize, input: &str) -> i64 {
     parse(input)
         .map(|pattern| {
             for x in 1..pattern.size.x {
@@ -56,11 +56,11 @@ fn part_(target_asymmetry: usize, input: &str) -> i32 {
         .sum()
 }
 
-pub fn part1(input: &str) -> i32 {
+pub fn part1(input: &str) -> i64 {
     part_(0, input)
 }
 
-pub fn part2(input: &str) -> i32 {
+pub fn part2(input: &str) -> i64 {
     part_(1, input)
 }
 

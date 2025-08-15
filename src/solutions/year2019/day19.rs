@@ -4,8 +4,8 @@ use crate::{
 };
 
 fn in_beam(mut vm: VM, pos: Vector) -> bool {
-    vm.input(pos.x.into());
-    vm.input(pos.y.into());
+    vm.input(pos.x);
+    vm.input(pos.y);
     let res = vm.output() == 1;
     vm.halt();
     res
@@ -24,7 +24,7 @@ pub fn part1(input: &str) -> usize {
     res
 }
 
-pub fn part2(input: &str) -> i32 {
+pub fn part2(input: &str) -> i64 {
     let vm = VM::new(input);
     let mut pos = Z;
     loop {

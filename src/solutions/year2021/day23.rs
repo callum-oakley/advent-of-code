@@ -44,7 +44,7 @@ fn in_hallway(v: Vector) -> bool {
     v.y == 1
 }
 
-fn room_x(amphipod: char) -> i32 {
+fn room_x(amphipod: char) -> i64 {
     match amphipod {
         'A' => 3,
         'B' => 5,
@@ -59,7 +59,7 @@ fn rooms(
     amphipod: char,
 ) -> impl Iterator<Item = Vector> {
     let x = room_x(amphipod);
-    (2..i32::MAX)
+    (2..i64::MAX)
         .map(move |y| Vector::new(x, y))
         .take_while(|&v| amphipods.contains_key(&LexOrd(v)))
 }
@@ -91,7 +91,7 @@ fn lowest_free_room(
 }
 
 fn path_from_room_to_hall(room: Vector, hall: Vector) -> Vec<Vector> {
-    fn range(a: i32, b: i32) -> Box<dyn Iterator<Item = i32>> {
+    fn range(a: i64, b: i64) -> Box<dyn Iterator<Item = i64>> {
         if a > b {
             Box::new((b..=a).rev())
         } else {

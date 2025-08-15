@@ -9,8 +9,8 @@ use std::{
 use nalgebra::{SVector, Scalar};
 use regex::Regex;
 
-pub type Vector = nalgebra::Vector2<i32>;
-pub type Turn = nalgebra::Matrix2<i32>;
+pub type Vector = nalgebra::Vector2<i64>;
+pub type Turn = nalgebra::Matrix2<i64>;
 
 pub const NW: Vector = Vector::new(-1, -1);
 pub const N: Vector = Vector::new(0, -1);
@@ -52,7 +52,7 @@ impl<V: Into<Vector>> Adjacent for V {
     }
 }
 
-pub fn reading_ord_key(v: Vector) -> [i32; 2] {
+pub fn reading_ord_key(v: Vector) -> [i64; 2] {
     [v.y, v.x]
 }
 
@@ -66,7 +66,7 @@ pub trait IntoVector<T, const D: usize> {
     fn into_vector(self) -> SVector<T, D>;
 }
 
-impl IntoVector<i32, 2> for char {
+impl IntoVector<i64, 2> for char {
     fn into_vector(self) -> Vector {
         match self {
             'N' | 'U' | '^' => N,
@@ -214,7 +214,7 @@ impl<T> Grid<T> {
             })
             .collect();
         assert!(
-            size.x * size.y == i32::try_from(data.len()).unwrap(),
+            size.x * size.y == i64::try_from(data.len()).unwrap(),
             "string is not rectangular",
         );
         Self::from_vec(size, data)
@@ -324,12 +324,12 @@ where
 
 #[derive(Debug, Clone, Copy)]
 pub struct Bounds<const D: usize> {
-    pub min: SVector<i32, D>,
-    pub max: SVector<i32, D>,
+    pub min: SVector<i64, D>,
+    pub max: SVector<i64, D>,
 }
 
 impl<const D: usize> Bounds<D> {
-    pub fn new(mut points: impl Iterator<Item = SVector<i32, D>>) -> Self {
+    pub fn new(mut points: impl Iterator<Item = SVector<i64, D>>) -> Self {
         let point = points.next().unwrap();
         let mut res = Self {
             min: point,
@@ -346,11 +346,11 @@ impl<const D: usize> Bounds<D> {
         res
     }
 
-    pub fn size(&self) -> SVector<i32, D> {
+    pub fn size(&self) -> SVector<i64, D> {
         self.max - self.min + SVector::from_element(1)
     }
 
-    pub fn contains(&self, v: SVector<i32, D>) -> bool {
+    pub fn contains(&self, v: SVector<i64, D>) -> bool {
         self.min.iter().zip(&v).all(|(a, b)| a <= b) && self.max.iter().zip(&v).all(|(a, b)| a >= b)
     }
 }

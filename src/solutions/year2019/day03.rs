@@ -27,7 +27,7 @@ fn parse(
     (parse_wire(wire0), parse_wire(wire1))
 }
 
-pub fn part1(input: &str) -> i32 {
+pub fn part1(input: &str) -> i64 {
     let (wire0, wire1) = parse(input);
     let wire0 = wire0.collect::<HashSet<Vector>>();
     wire1

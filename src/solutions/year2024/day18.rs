@@ -12,7 +12,7 @@ fn parse(input: &str) -> Vec<Vector> {
         .collect()
 }
 
-fn search(size: i32, corrupted: &HashSet<Vector>) -> Option<usize> {
+fn search(size: i64, corrupted: &HashSet<Vector>) -> Option<usize> {
     search::breadth_first(
         (Z, 0),
         |&(pos, steps), push| {
@@ -28,7 +28,7 @@ fn search(size: i32, corrupted: &HashSet<Vector>) -> Option<usize> {
     .map(|(_, steps)| steps)
 }
 
-fn part1_(size: i32, bytes: usize, input: &str) -> usize {
+fn part1_(size: i64, bytes: usize, input: &str) -> usize {
     search(size, &parse(input)[..bytes].iter().copied().collect()).unwrap()
 }
 
@@ -36,7 +36,7 @@ pub fn part1(input: &str) -> usize {
     part1_(70, 1024, input)
 }
 
-fn part2_(size: i32, input: &str) -> String {
+fn part2_(size: i64, input: &str) -> String {
     let bytes = parse(input);
     let i = search::binary(0, bytes.len(), |i| {
         search(size, &bytes[..i].iter().copied().collect()).is_none()

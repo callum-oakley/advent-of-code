@@ -30,7 +30,7 @@ fn spiral() -> impl Iterator<Item = Vector> {
     })
 }
 
-pub fn part1(input: &str) -> i32 {
+pub fn part1(input: &str) -> i64 {
     spiral()
         .nth(input.parse::<usize>().unwrap() - 1)
         .unwrap()
@@ -38,7 +38,7 @@ pub fn part1(input: &str) -> i32 {
         .sum()
 }
 
-pub fn part2(input: &str) -> i32 {
+pub fn part2(input: &str) -> i64 {
     let input = input.parse().unwrap();
 
     let mut mem = HashMap::new();

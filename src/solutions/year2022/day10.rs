@@ -6,7 +6,7 @@ use crate::grid::{Grid, Vector};
 
 enum Instruction {
     Noop,
-    Addx(i32),
+    Addx(i64),
 }
 
 fn parse(input: &str) -> impl Iterator<Item = Instruction> {
@@ -20,7 +20,7 @@ fn parse(input: &str) -> impl Iterator<Item = Instruction> {
     })
 }
 
-fn cpu(input: &str) -> Vec<i32> {
+fn cpu(input: &str) -> Vec<i64> {
     let mut res = vec![1];
     for instruction in parse(input) {
         res.push(res[res.len() - 1]);
@@ -34,19 +34,19 @@ fn cpu(input: &str) -> Vec<i32> {
     res
 }
 
-pub fn part1(input: &str) -> i32 {
+pub fn part1(input: &str) -> i64 {
     let xs = cpu(input);
     (0..)
         .map(|i| 20 + 40 * i)
-        .map_while(|cycle| xs.get(cycle - 1).map(|x| i32::try_from(cycle).unwrap() * x))
+        .map_while(|cycle| xs.get(cycle - 1).map(|x| i64::try_from(cycle).unwrap() * x))
         .sum()
 }
 
 fn part2_(input: &str) -> HashSet<Vector> {
     let xs = cpu(input);
     let mut pixels = HashSet::new();
-    for x in 0i32..40 {
-        for y in 0i32..6 {
+    for x in 0i64..40 {
+        for y in 0i64..6 {
             if (xs[usize::try_from(40 * y + x).unwrap()] - x).abs() <= 1 {
                 pixels.insert(nalgebra::vector![x, y]);
             }

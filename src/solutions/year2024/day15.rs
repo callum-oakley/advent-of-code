@@ -69,7 +69,7 @@ fn tick(state: &mut Grid<char>, dir: Vector) {
     }
 }
 
-fn score(state: &Grid<char>) -> i32 {
+fn score(state: &Grid<char>) -> i64 {
     state
         .iter()
         .filter(|&(_, &tile)| "O[".contains(tile))
@@ -77,19 +77,19 @@ fn score(state: &Grid<char>) -> i32 {
         .sum()
 }
 
-fn part_(mut state: Grid<char>, dirs: impl Iterator<Item = Vector>) -> i32 {
+fn part_(mut state: Grid<char>, dirs: impl Iterator<Item = Vector>) -> i64 {
     for dir in dirs {
         tick(&mut state, dir);
     }
     score(&state)
 }
 
-pub fn part1(input: &str) -> i32 {
+pub fn part1(input: &str) -> i64 {
     let (state, dirs) = parse(input);
     part_(state, dirs)
 }
 
-pub fn part2(input: &str) -> i32 {
+pub fn part2(input: &str) -> i64 {
     let (state, dirs) = parse(input);
     part_(expand(&state), dirs)
 }

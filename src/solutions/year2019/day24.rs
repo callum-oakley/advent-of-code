@@ -32,7 +32,7 @@ pub fn part1(input: &str) -> u32 {
     biodiversity(&bugs)
 }
 
-fn adjacent(bugs: &HashMap<i32, Grid<bool>>, depth: i32, pos: Vector) -> usize {
+fn adjacent(bugs: &HashMap<i64, Grid<bool>>, depth: i64, pos: Vector) -> usize {
     let mut res = 0;
     for p in pos.adjacent4() {
         res += if p.x < 0 {
@@ -44,7 +44,7 @@ fn adjacent(bugs: &HashMap<i32, Grid<bool>>, depth: i32, pos: Vector) -> usize {
         } else if p.y > 4 {
             usize::from(bugs[&(depth - 1)][[2, 3]])
         } else if p == Vector::new(2, 2) {
-            match Into::<[i32; 2]>::into(pos) {
+            match Into::<[i64; 2]>::into(pos) {
                 [2, 1] => (0..5).filter(|&x| bugs[&(depth + 1)][[x, 0]]).count(),
                 [1, 2] => (0..5).filter(|&y| bugs[&(depth + 1)][[0, y]]).count(),
                 [3, 2] => (0..5).filter(|&y| bugs[&(depth + 1)][[4, y]]).count(),

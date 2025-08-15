@@ -60,7 +60,7 @@ fn parse(map: &str) -> (HashSet<Vector>, Robot) {
     (scaffold, robot.unwrap())
 }
 
-fn part1_(map: &str) -> i32 {
+fn part1_(map: &str) -> i64 {
     let (scaffold, _) = parse(map);
     scaffold
         .iter()
@@ -162,7 +162,7 @@ fn compress(path: PathRef) -> String {
     unreachable!()
 }
 
-pub fn part1(input: &str) -> i32 {
+pub fn part1(input: &str) -> i64 {
     let mut buf = Vec::new();
     play(&mut VM::new(input), io::empty(), &mut buf).unwrap();
     part1_(String::from_utf8(buf).unwrap().trim())
