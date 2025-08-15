@@ -1,0 +1,36 @@
+{
+	"parse": {
+		"prefix": "parse",
+		"body": [
+			"fn parse(input: &str) -> $1 {",
+			"    ${0:todo!()}",
+			"}",
+		]
+	},
+	"part1": {
+		"prefix": "part1",
+		"body": [
+			"pub fn part1(input: &str) -> $1 {",
+			"    ${0:todo!()}",
+			"}",
+		]
+	},
+	"part2": {
+		"prefix": "part2",
+		"body": [
+			"pub fn part2(input: &str) -> $1 {",
+			"    ${0:todo!()}",
+			"}",
+		]
+	},
+	"tests": {
+		"prefix": "tests",
+		"body": [
+			"pub fn tests() {",
+			"    let example = ${1:todo!()};",
+			"    assert_eq!(part1(example), ${0:todo!()});",
+			"    // assert_eq!(part2(example), todo!());",
+			"}",
+		]
+	}
+}

@@ -1,5 +1,6 @@
 .session
-.vscode
+.vscode/*
+!.vscode/advent-of-code.code-snippets
 /answer
 /input
 /target
