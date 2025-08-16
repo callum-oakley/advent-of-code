@@ -177,48 +177,30 @@ where
     })
 }
 
-/// Search a state space for a min-cost state given lower and upper bounds for cost.
-pub fn branch_and_bound<S, A, F, C, D, O>(
-    start: S,
-    mut adjacent: A,
-    mut filter: F,
-    lower_bound: C,
-    upper_bound: D,
-) -> S
+/// Search a state space min-cost first discarding any branches which couldn't possibly contain an
+/// optimal solution according to the provided bound.
+pub fn branch_and_bound<S, A, C, B, O>(start: S, adjacent: A, cost: C, bound: B) -> O
 where
-    S: Clone,
     A: FnMut(&S, &mut dyn FnMut(S)),
-    F: FnMut(&S) -> bool,
     C: Fn(&S) -> O,
-    D: Fn(&S) -> O,
+    B: Fn(&S) -> O,
     O: Ord + std::fmt::Debug,
 {
-    let mut min_upper_bound = upper_bound(&start);
-    let mut best_state = start.clone();
-    let mut queue = CostHeap {
-        cost: &lower_bound,
-        binary_heap: BinaryHeap::new(),
-    };
-    queue.push(start);
-
-    while let Some(state) = queue.pop() {
-        let upper_bound = upper_bound(&state);
-        if upper_bound < min_upper_bound {
-            min_upper_bound = upper_bound;
-            println!("{min_upper_bound:?}");
-            best_state = state.clone();
-        }
-        if lower_bound(&state) < min_upper_bound && filter(&state) {
-            adjacent(&state, &mut |state| {
-                if lower_bound(&state) < min_upper_bound {
-                    queue.push(state);
-                }
-            });
-        }
-    }
-
-    assert_eq!(lower_bound(&best_state), upper_bound(&best_state));
-    best_state
+    let mut min_cost = cost(&start);
+    dijkstra(
+        start,
+        adjacent,
+        |state| {
+            let cost = cost(state);
+            if cost < min_cost {
+                min_cost = cost;
+            }
+            bound(state) < min_cost
+        },
+        &cost,
+    )
+    .for_each(drop);
+    min_cost
 }
 
 /// Finds the smallest value where pred is true, assuming that it is false for all lower values, and
