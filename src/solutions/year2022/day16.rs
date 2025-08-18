@@ -2,14 +2,6 @@ use std::{cmp::Reverse, collections::BTreeMap};
 
 use regex::Regex;
 
-#[derive(Clone, PartialEq, Eq, Hash)]
-struct State<'a> {
-    pos: &'a str,
-    minutes: usize,
-    pressure: usize,
-    valves: BTreeMap<&'a str, usize>,
-}
-
 fn parse(input: &str) -> (BTreeMap<&str, usize>, BTreeMap<&str, Vec<&str>>) {
     let mut valves = BTreeMap::new();
     let mut tunnels = BTreeMap::new();
@@ -17,7 +9,10 @@ fn parse(input: &str) -> (BTreeMap<&str, usize>, BTreeMap<&str, Vec<&str>>) {
         .unwrap();
     for captures in re.captures_iter(input) {
         let valve = captures.get(1).unwrap().as_str();
-        valves.insert(valve, captures[2].parse().unwrap());
+        let flow: usize = captures[2].parse().unwrap();
+        if flow > 0 {
+            valves.insert(valve, flow);
+        }
         tunnels.insert(
             valve,
             captures.get(3).unwrap().as_str().split(", ").collect(),
@@ -42,31 +37,15 @@ fn distance(tunnels: &BTreeMap<&str, Vec<&str>>, a: &str, b: &str) -> usize {
     .1
 }
 
-fn bound(
-    state: &State,
-    distances: &BTreeMap<&str, BTreeMap<&str, usize>>,
-    optimistic: bool,
-) -> usize {
-    let mut state = state.clone();
-    while let Some((&valve, &flow)) = state.valves.iter().max_by_key(|&(_, flow)| flow) {
-        if optimistic {
-            // Strictly speaking this should be 2, but 4 gives the correct answer with a significant
-            // speedup.
-            state.minutes += 4;
-        } else {
-            state.minutes += distances[state.pos][valve] + 1;
-        }
-        state.valves.remove(valve);
-        if state.minutes >= 30 {
-            break;
-        }
-        state.pos = valve;
-        state.pressure += flow * (30 - state.minutes);
-    }
-    state.pressure
-}
-
 pub fn part1(input: &str) -> usize {
+    #[derive(Clone)]
+    struct State<'a> {
+        pos: &'a str,
+        minutes: usize,
+        pressure: usize,
+        valves: BTreeMap<&'a str, usize>,
+    }
+
     let (valves, tunnels) = parse(input);
 
     let mut distances: BTreeMap<&str, BTreeMap<&str, usize>> = BTreeMap::new();
@@ -101,10 +80,41 @@ pub fn part1(input: &str) -> usize {
                 }
             }
         },
-        |state| Reverse(bound(state, &distances, false)),
-        |state| Reverse(bound(state, &distances, true)),
+        |state| {
+            let mut state = state.clone();
+            while let Some((&valve, &flow)) = state.valves.iter().max_by_key(|&(_, flow)| flow) {
+                state.minutes += distances[state.pos][valve] + 1;
+                state.valves.remove(valve);
+                if state.minutes >= 30 {
+                    break;
+                }
+                state.pos = valve;
+                state.pressure += flow * (30 - state.minutes);
+            }
+            state
+        },
+        |state| Reverse(state.pressure),
+        |state| {
+            let mut state = state.clone();
+            while let Some((&valve, &flow)) = state.valves.iter().max_by_key(|&(_, flow)| flow) {
+                state.minutes += state
+                    .valves
+                    .keys()
+                    .filter_map(|valve| distances[state.pos].get(valve))
+                    .min()
+                    .unwrap()
+                    + 1;
+                state.valves.remove(valve);
+                if state.minutes >= 30 {
+                    break;
+                }
+                state.pos = valve;
+                state.pressure += flow * (30 - state.minutes);
+            }
+            Reverse(state.pressure)
+        },
     )
-    .0
+    .pressure
 }
 
 pub fn tests() {

@@ -177,30 +177,44 @@ where
     })
 }
 
-/// Search a state space min-cost first discarding any branches which couldn't possibly contain an
-/// optimal solution according to the provided bound.
-pub fn branch_and_bound<S, A, C, B, O>(start: S, adjacent: A, cost: C, bound: B) -> O
+/// Search a state space for a lowest cost solution given: a heuristic for arriving at an arbitrary
+/// final state given any other state, a cost function to evaluate a final state, and a bound
+/// function to give a lower bound on the cost of the best final state reachable from a given state.
+pub fn branch_and_bound<S, A, H, C, B, F, O>(
+    start: S,
+    adjacent: A,
+    mut heuristic: H,
+    cost: C,
+    bound: B,
+) -> F
 where
     A: FnMut(&S, &mut dyn FnMut(S)),
-    C: Fn(&S) -> O,
+    H: FnMut(&S) -> F,
+    C: Fn(&F) -> O,
     B: Fn(&S) -> O,
-    O: Ord + std::fmt::Debug,
+    O: Ord,
 {
-    let mut min_cost = cost(&start);
+    let mut best_final_state = heuristic(&start);
+    let mut best_cost = cost(&best_final_state);
     dijkstra(
         start,
         adjacent,
         |state| {
-            let cost = cost(state);
-            if cost < min_cost {
-                min_cost = cost;
+            let final_state = heuristic(state);
+            let cost = cost(&final_state);
+            if cost < best_cost {
+                best_cost = cost;
+                best_final_state = final_state;
             }
-            bound(state) < min_cost
+            // The bound is the best cost we could hope for from this state, so if it isn't an
+            // improvement on the best cost we've already seen, there's no reason to explore this
+            // branch.
+            bound(state) < best_cost
         },
-        &cost,
+        &bound,
     )
     .for_each(drop);
-    min_cost
+    best_final_state
 }
 
 /// Finds the smallest value where pred is true, assuming that it is false for all lower values, and
