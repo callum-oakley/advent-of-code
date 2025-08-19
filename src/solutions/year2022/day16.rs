@@ -1,6 +1,8 @@
-use std::{cmp::Reverse, collections::BTreeMap};
+use std::collections::BTreeMap;
 
 use regex::Regex;
+
+use crate::part::Part;
 
 fn parse(input: &str) -> (BTreeMap<&str, usize>, BTreeMap<&str, Vec<&str>>) {
     let mut valves = BTreeMap::new();
@@ -37,11 +39,16 @@ fn distance(tunnels: &BTreeMap<&str, Vec<&str>>, a: &str, b: &str) -> usize {
     .1
 }
 
-pub fn part1(input: &str) -> usize {
-    #[derive(Clone)]
-    struct State<'a> {
+fn part_(part: Part, input: &str) -> usize {
+    #[derive(Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
+    struct Worker<'a> {
         pos: &'a str,
         minutes: usize,
+    }
+
+    #[derive(Clone, PartialEq, Eq, Hash)]
+    struct State<'a> {
+        workers: Vec<Worker<'a>>,
         pressure: usize,
         valves: BTreeMap<&'a str, usize>,
     }
@@ -58,63 +65,79 @@ pub fn part1(input: &str) -> usize {
         }
     }
 
-    crate::search::branch_and_bound(
+    crate::search::branch_and_bound_max(
         State {
-            pos: "AA",
-            minutes: 0,
+            workers: match part {
+                Part::One => vec![Worker {
+                    pos: "AA",
+                    minutes: 0,
+                }],
+                Part::Two => vec![
+                    Worker {
+                        pos: "AA",
+                        minutes: 4
+                    };
+                    2
+                ],
+            },
             pressure: 0,
             valves,
         },
         |state, push| {
-            for (&valve, &flow) in &state.valves {
-                let minutes = state.minutes + distances[state.pos][valve] + 1;
-                if minutes < 30 {
-                    let mut valves = state.valves.clone();
-                    valves.remove(valve);
-                    push(State {
-                        pos: valve,
-                        minutes,
-                        pressure: state.pressure + flow * (30 - minutes),
-                        valves,
-                    });
+            for i in 0..state.workers.len() {
+                for (&valve, &flow) in &state.valves {
+                    let mut state = state.clone();
+                    state.workers[i].minutes += distances[state.workers[i].pos][valve] + 1;
+                    if state.workers[i].minutes < 30 {
+                        state.valves.remove(valve);
+                        state.workers[i].pos = valve;
+                        state.pressure += flow * (30 - state.workers[i].minutes);
+                        push(state);
+                    }
                 }
             }
         },
-        |state| {
+        crate::search::hash_filter(|state: &State| {
             let mut state = state.clone();
-            while let Some((&valve, &flow)) = state.valves.iter().max_by_key(|&(_, flow)| flow) {
-                state.minutes += distances[state.pos][valve] + 1;
-                state.valves.remove(valve);
-                if state.minutes >= 30 {
-                    break;
-                }
-                state.pos = valve;
-                state.pressure += flow * (30 - state.minutes);
-            }
+            state.workers.sort_unstable();
             state
-        },
-        |state| Reverse(state.pressure),
+        }),
+        |state| state.pressure,
+        // For our bound, suppose that we open valves in order from highest flow rate to lowest, and
+        // that each valve we open happens to also be the closest valve to the worker with the most
+        // time remaining.
         |state| {
             let mut state = state.clone();
             while let Some((&valve, &flow)) = state.valves.iter().max_by_key(|&(_, flow)| flow) {
-                state.minutes += state
+                let i = (0..state.workers.len())
+                    .min_by_key(|&i| state.workers[i].minutes)
+                    .unwrap();
+                state.workers[i].minutes += state
                     .valves
                     .keys()
-                    .filter_map(|valve| distances[state.pos].get(valve))
+                    .map(|valve| distances[state.workers[i].pos][valve])
                     .min()
                     .unwrap()
                     + 1;
                 state.valves.remove(valve);
-                if state.minutes >= 30 {
+                if state.workers[i].minutes >= 30 {
                     break;
                 }
-                state.pos = valve;
-                state.pressure += flow * (30 - state.minutes);
+                state.workers[i].pos = valve;
+                state.pressure += flow * (30 - state.workers[i].minutes);
             }
-            Reverse(state.pressure)
+            state.pressure
         },
     )
     .pressure
+}
+
+pub fn part1(input: &str) -> usize {
+    part_(Part::One, input)
+}
+
+pub fn part2(input: &str) -> usize {
+    part_(Part::Two, input)
 }
 
 pub fn tests() {
@@ -131,5 +154,5 @@ pub fn tests() {
         Valve JJ has flow rate=21; tunnel leads to valve II
     ";
     assert_eq!(part1(example), 1651);
-    // assert_eq!(part2(example), todo!());
+    assert_eq!(part2(example), 1707);
 }
