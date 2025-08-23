@@ -6,7 +6,7 @@ use std::{
     sync::LazyLock,
 };
 
-use nalgebra::{SVector, Scalar};
+use nalgebra::{SVector, Scalar, Vector3};
 use regex::Regex;
 
 pub type Vector = nalgebra::Vector2<i64>;
@@ -49,6 +49,23 @@ impl<V: Into<Vector>> Adjacent for V {
         [NW, N, NE, W, Z, E, SW, S, SE]
             .into_iter()
             .map(move |dir| dir + v)
+    }
+}
+
+pub trait Adjacent3 {
+    fn adjacent6(self) -> impl Iterator<Item = Vector3<i64>>;
+}
+
+impl<V: Into<Vector3<i64>>> Adjacent3 for V {
+    fn adjacent6(self) -> impl Iterator<Item = Vector3<i64>> {
+        let v = self.into();
+        (0..3).flat_map(move |axis| {
+            [1, -1].into_iter().map(move |sign| {
+                let mut v = v;
+                v[axis] += sign;
+                v
+            })
+        })
     }
 }
 
