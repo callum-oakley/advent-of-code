@@ -214,7 +214,7 @@ where
             // branch.
             bound(state) < best_cost
         },
-        &bound,
+        &cost,
     )
     .for_each(drop);
     best_final_state
