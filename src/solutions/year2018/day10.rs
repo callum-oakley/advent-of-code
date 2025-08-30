@@ -31,7 +31,7 @@ fn untick(lights: &mut [Light]) {
 }
 
 fn height(lights: &[Light]) -> i64 {
-    let bounds = Bounds::new(lights.iter().map(|light| light.position));
+    let bounds: Bounds<2> = lights.iter().map(|light| light.position).collect();
     bounds.max.y - bounds.min.y + 1
 }
 

@@ -69,7 +69,7 @@ pub fn part1(input: &str) -> usize {
 // to finding a lowest cost path to a cube of width 1.
 pub fn part2(input: &str) -> i64 {
     let bots = parse(input);
-    let bounds = Bounds::new(bots.iter().map(|bot| bot.pos));
+    let bounds: Bounds<3> = bots.iter().map(|bot| bot.pos).collect();
     search::dijkstra(
         Cube {
             pos: bounds.min,

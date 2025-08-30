@@ -23,7 +23,7 @@ fn parse(input: &str) -> HashSet<Vector> {
 // Adapted from 2018 day 17
 fn part_(part: Part, input: &str) -> usize {
     let rock = parse(input);
-    let bounds = Bounds::new(rock.iter().copied());
+    let bounds = Bounds::from(&rock);
 
     let mut flowing = HashSet::from([Vector::new(500, 0)]);
     let mut settled = HashSet::new();

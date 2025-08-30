@@ -141,7 +141,7 @@ fn stitch(tiles: HashMap<Vector, Tile>) -> Grid<char> {
         })
         .collect();
 
-    let trimmed_tiles_bounds = Bounds::new(trimmed_tiles.keys().copied());
+    let trimmed_tiles_bounds = Bounds::from(&trimmed_tiles);
     let tile_size = trimmed_tiles[&Z].size;
 
     let mut res = Grid::new('.', trimmed_tiles_bounds.size().component_mul(&tile_size));
@@ -155,7 +155,7 @@ fn stitch(tiles: HashMap<Vector, Tile>) -> Grid<char> {
 
 pub fn part1(input: &str) -> u64 {
     let fixed = assemble(parse(input));
-    let bounds = Bounds::new(fixed.keys().copied());
+    let bounds = Bounds::from(&fixed);
     fixed[&bounds.min].id
         * fixed[&Vector::new(bounds.min.x, bounds.max.y)].id
         * fixed[&Vector::new(bounds.max.x, bounds.min.y)].id

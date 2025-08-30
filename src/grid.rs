@@ -1,4 +1,5 @@
 use std::{
+    collections::{BTreeMap, BTreeSet, HashMap, HashSet},
     fmt::{self, Write},
     iter,
     ops::{Index, IndexMut},
@@ -31,24 +32,21 @@ pub trait Adjacent {
     fn adjacent9(self) -> impl Iterator<Item = Vector>;
 }
 
-impl<V: Into<Vector>> Adjacent for V {
+impl Adjacent for Vector {
     fn adjacent4(self) -> impl Iterator<Item = Vector> {
-        let v = self.into();
-        [N, W, E, S].into_iter().map(move |dir| dir + v)
+        [N, W, E, S].into_iter().map(move |dir| dir + self)
     }
 
     fn adjacent8(self) -> impl Iterator<Item = Vector> {
-        let v = self.into();
         [NW, N, NE, W, E, SW, S, SE]
             .into_iter()
-            .map(move |dir| dir + v)
+            .map(move |dir| dir + self)
     }
 
     fn adjacent9(self) -> impl Iterator<Item = Vector> {
-        let v = self.into();
         [NW, N, NE, W, Z, E, SW, S, SE]
             .into_iter()
-            .map(move |dir| dir + v)
+            .map(move |dir| dir + self)
     }
 }
 
@@ -56,12 +54,11 @@ pub trait Adjacent3 {
     fn adjacent6(self) -> impl Iterator<Item = Vector3<i64>>;
 }
 
-impl<V: Into<Vector3<i64>>> Adjacent3 for V {
+impl Adjacent3 for Vector3<i64> {
     fn adjacent6(self) -> impl Iterator<Item = Vector3<i64>> {
-        let v = self.into();
         (0..3).flat_map(move |axis| {
             [1, -1].into_iter().map(move |sign| {
-                let mut v = v;
+                let mut v = self;
                 v[axis] += sign;
                 v
             })
@@ -196,7 +193,74 @@ pub fn scan(s: &str) -> impl Iterator<Item = (Vector, char)> {
     })
 }
 
+#[derive(Debug, Clone, Copy)]
+pub struct Bounds<const D: usize> {
+    pub min: SVector<i64, D>,
+    pub max: SVector<i64, D>,
+}
+
+impl<const D: usize> Bounds<D> {
+    pub fn size(&self) -> SVector<i64, D> {
+        self.max - self.min + SVector::from_element(1)
+    }
+
+    pub fn contains(&self, v: SVector<i64, D>) -> bool {
+        self.min.iter().zip(&v).all(|(a, b)| a <= b) && self.max.iter().zip(&v).all(|(a, b)| a >= b)
+    }
+}
+
+impl<const D: usize> FromIterator<SVector<i64, D>> for Bounds<D> {
+    fn from_iter<I: IntoIterator<Item = SVector<i64, D>>>(points: I) -> Self {
+        let mut points = points.into_iter();
+        let point = points.next().unwrap();
+        let mut res = Self {
+            min: point,
+            max: point,
+        };
+
+        for point in points {
+            for (axis, &element) in point.iter().enumerate() {
+                res.min[axis] = res.min[axis].min(element);
+                res.max[axis] = res.max[axis].max(element);
+            }
+        }
+
+        res
+    }
+}
+
+impl<'a, const D: usize> From<&'a Vec<SVector<i64, D>>> for Bounds<D> {
+    fn from(value: &'a Vec<SVector<i64, D>>) -> Self {
+        value.iter().copied().collect()
+    }
+}
+
+impl<'a, const D: usize> From<&'a HashSet<SVector<i64, D>>> for Bounds<D> {
+    fn from(value: &'a HashSet<SVector<i64, D>>) -> Self {
+        value.iter().copied().collect()
+    }
+}
+
+impl<'a, const D: usize> From<&'a BTreeSet<SVector<i64, D>>> for Bounds<D> {
+    fn from(value: &'a BTreeSet<SVector<i64, D>>) -> Self {
+        value.iter().copied().collect()
+    }
+}
+
+impl<'a, const D: usize, T> From<&'a BTreeMap<SVector<i64, D>, T>> for Bounds<D> {
+    fn from(value: &'a BTreeMap<SVector<i64, D>, T>) -> Self {
+        value.keys().copied().collect()
+    }
+}
+
+impl<'a, const D: usize, T> From<&'a HashMap<SVector<i64, D>, T>> for Bounds<D> {
+    fn from(value: &'a HashMap<SVector<i64, D>, T>) -> Self {
+        value.keys().copied().collect()
+    }
+}
+
 #[derive(Clone, PartialEq, Eq, Hash)]
+// #[deprecated]
 pub struct Grid<T> {
     data: Vec<T>,
     pub size: Vector,
@@ -339,45 +403,12 @@ where
     }
 }
 
-#[derive(Debug, Clone, Copy)]
-pub struct Bounds<const D: usize> {
-    pub min: SVector<i64, D>,
-    pub max: SVector<i64, D>,
-}
-
-impl<const D: usize> Bounds<D> {
-    pub fn new(mut points: impl Iterator<Item = SVector<i64, D>>) -> Self {
-        let point = points.next().unwrap();
-        let mut res = Self {
-            min: point,
-            max: point,
-        };
-
-        for point in points {
-            for (axis, &element) in point.iter().enumerate() {
-                res.min[axis] = res.min[axis].min(element);
-                res.max[axis] = res.max[axis].max(element);
-            }
-        }
-
-        res
-    }
-
-    pub fn size(&self) -> SVector<i64, D> {
-        self.max - self.min + SVector::from_element(1)
-    }
-
-    pub fn contains(&self, v: SVector<i64, D>) -> bool {
-        self.min.iter().zip(&v).all(|(a, b)| a <= b) && self.max.iter().zip(&v).all(|(a, b)| a >= b)
-    }
-}
-
 impl<I> From<I> for Grid<bool>
 where
     I: IntoIterator<Item = Vector> + Clone,
 {
     fn from(points: I) -> Self {
-        let bounds = Bounds::new(points.clone().into_iter());
+        let bounds: Bounds<2> = points.clone().into_iter().collect();
         let mut res = Self::new(false, bounds.size());
         for point in points {
             res[point - bounds.min] = true;

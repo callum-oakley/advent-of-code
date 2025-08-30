@@ -64,7 +64,7 @@ fn settle(
 
 fn part_(input: &str) -> (usize, usize) {
     let clay = parse(input);
-    let bounds = Bounds::new(clay.iter().copied());
+    let bounds = Bounds::from(&clay);
 
     let mut flowing = HashSet::from([Vector::new(500, 0)]);
     let mut settled = HashSet::new();

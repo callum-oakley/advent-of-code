@@ -32,7 +32,7 @@ pub fn part1(input: &str) -> u32 {
         .map(|c| (c, 0))
         .collect::<HashMap<_, _>>();
 
-    let bounds = Bounds::<2>::new(coordinates.iter().copied());
+    let bounds = Bounds::<2>::from(&coordinates);
     for x in bounds.min.x..=bounds.max.x {
         for y in bounds.min.y..=bounds.max.y {
             if let Some(c) = unique_closest(Vector::new(x, y), &coordinates) {
@@ -58,7 +58,7 @@ fn part2_(tolerance: i64, input: &str) -> u32 {
 
     let mut res = 0;
 
-    let bounds = Bounds::<2>::new(coordinates.iter().copied());
+    let bounds = Bounds::<2>::from(&coordinates);
     for x in bounds.min.x..=bounds.max.x {
         for y in bounds.min.y..=bounds.max.y {
             let pos = Vector::new(x, y);

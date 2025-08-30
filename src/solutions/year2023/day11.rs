@@ -6,7 +6,7 @@ fn parse(expansion: i64, input: &str) -> Vec<Vector> {
         .map(|(pos, _)| pos)
         .collect();
 
-    let mut size = Bounds::new(galaxies.iter().copied()).size();
+    let mut size = Bounds::from(&galaxies).size();
     for axis in [0, 1] {
         let mut a = 0;
         while a < size[axis] {

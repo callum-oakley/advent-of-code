@@ -1,5 +1,6 @@
 use std::collections::{HashMap, HashSet};
 
+use nalgebra::vector;
 use regex::Regex;
 
 use crate::grid::{self, Adjacent, Vector};
@@ -26,7 +27,7 @@ fn parse(input: &str) -> (HashMap<Vector, char>, Vec<Label>) {
                 covers: (m.start()..m.end())
                     .flat_map(|x| {
                         let x = i64::try_from(x).unwrap();
-                        [x, y].adjacent8()
+                        vector![x, y].adjacent8()
                     })
                     .collect(),
             })

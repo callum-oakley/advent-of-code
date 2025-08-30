@@ -19,7 +19,7 @@ pub fn part1(input: &str) -> usize {
 
 pub fn part2(input: &str) -> usize {
     let cubes = parse(input);
-    let mut bounds = Bounds::new(cubes.iter().copied());
+    let mut bounds = Bounds::from(&cubes);
     bounds.min -= vector![1, 1, 1];
     bounds.max += vector![1, 1, 1];
     let exterior: HashSet<_> = crate::search::breadth_first(
