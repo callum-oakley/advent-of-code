@@ -73,7 +73,7 @@ pub fn reading_ord_key(v: Vector) -> [i64; 2] {
     [v.y, v.x]
 }
 
-pub fn line_segment(s: Vector, t: Vector) -> impl Iterator<Item = Vector> {
+pub fn line_segment(s: Vector, t: Vector) -> impl DoubleEndedIterator<Item = Vector> {
     let len = (t - s).abs().max();
     let dir = (t - s) / len;
     (0..=len).map(move |i| s + i * dir)
@@ -181,7 +181,7 @@ impl IntoChar for &str {
     }
 }
 
-pub fn scan(s: &str) -> impl Iterator<Item = (Vector, char)> + '_ {
+pub fn scan(s: &str) -> impl Iterator<Item = (Vector, char)> {
     let mut v = Z;
     s.chars().filter_map(move |c| {
         if c == '\n' {
