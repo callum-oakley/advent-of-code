@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use crate::{
     grid::{Vector, LEFT, N, RIGHT, Z},
@@ -34,6 +34,7 @@ pub fn part2(input: &str) -> &str {
     crate::ocr::parse(
         hull.iter()
             .filter(|&(_, &paint)| paint == 1)
-            .map(|(&pos, _)| pos),
+            .map(|(&pos, _)| pos)
+            .collect::<HashSet<_>>(),
     )
 }

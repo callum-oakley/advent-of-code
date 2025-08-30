@@ -7,7 +7,7 @@ use std::{
     sync::LazyLock,
 };
 
-use nalgebra::{SVector, Scalar, Vector3};
+use nalgebra::{SVector, Scalar, Vector3, vector};
 use regex::Regex;
 
 pub type Vector = nalgebra::Vector2<i64>;
@@ -178,6 +178,41 @@ impl IntoChar for &str {
     }
 }
 
+pub trait IntoString {
+    fn into_string(self) -> String;
+}
+
+impl IntoString for HashSet<Vector> {
+    fn into_string(self) -> String {
+        let bounds = Bounds::from(&self);
+        let mut res = String::new();
+        for y in bounds.min.y..=bounds.max.y {
+            for x in bounds.min.x..=bounds.max.x {
+                res.push(self.contains(&vector![x, y]).into_char());
+            }
+            res.push('\n');
+        }
+        res
+    }
+}
+
+impl<C> IntoString for HashMap<Vector, C>
+where
+    for<'a> &'a C: IntoChar,
+{
+    fn into_string(self) -> String {
+        let bounds = Bounds::from(&self);
+        let mut res = String::new();
+        for y in bounds.min.y..=bounds.max.y {
+            for x in bounds.min.x..=bounds.max.x {
+                res.push(self[&vector![x, y]].into_char());
+            }
+            res.push('\n');
+        }
+        res
+    }
+}
+
 pub fn scan(s: &str) -> impl Iterator<Item = (Vector, char)> {
     let mut v = Z;
     s.chars().filter_map(move |c| {
@@ -260,7 +295,6 @@ impl<'a, const D: usize, T> From<&'a HashMap<SVector<i64, D>, T>> for Bounds<D> 
 }
 
 #[derive(Clone, PartialEq, Eq, Hash)]
-// #[deprecated]
 pub struct Grid<T> {
     data: Vec<T>,
     pub size: Vector,
@@ -420,5 +454,21 @@ where
 impl Grid<bool> {
     pub fn points(&self) -> impl Iterator<Item = Vector> + '_ {
         self.keys().filter(|&v| self[v])
+    }
+}
+
+impl<C> IntoString for Grid<C>
+where
+    for<'a> &'a C: IntoChar,
+{
+    fn into_string(self) -> String {
+        let mut res = String::new();
+        for y in 0..self.size.y {
+            for x in 0..self.size.x {
+                res.push(self[vector![x, y]].into_char());
+            }
+            res.push('\n');
+        }
+        res
     }
 }

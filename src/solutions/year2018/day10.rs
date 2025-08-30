@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use regex::Regex;
 
 use crate::grid::{Bounds, IntoVector, Vector};
@@ -46,7 +48,12 @@ fn part_(input: &str) -> (&str, usize) {
         } else {
             untick(&mut lights);
             return (
-                crate::ocr::parse(lights.iter().map(|light| light.position)),
+                crate::ocr::parse(
+                    lights
+                        .iter()
+                        .map(|light| light.position)
+                        .collect::<HashSet<_>>(),
+                ),
                 t,
             );
         }

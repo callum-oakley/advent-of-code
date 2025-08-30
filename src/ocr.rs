@@ -1,6 +1,6 @@
 use std::sync::LazyLock;
 
-use crate::grid::Grid;
+use crate::grid::IntoString;
 
 static KNOWN: LazyLock<Vec<(&str, &str)>> = LazyLock::new(|| {
     vec![
@@ -90,8 +90,8 @@ static KNOWN: LazyLock<Vec<(&str, &str)>> = LazyLock::new(|| {
     ]
 });
 
-pub fn parse(g: impl Into<Grid<bool>>) -> &'static str {
-    let s = g.into().to_string();
+pub fn parse(g: impl IntoString) -> &'static str {
+    let s = g.into_string();
     for (image, word) in &*KNOWN {
         if s.trim() == image.trim().replace(' ', "") {
             return word;
