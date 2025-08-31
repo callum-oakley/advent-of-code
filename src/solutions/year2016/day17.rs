@@ -1,7 +1,7 @@
 use md5::{Digest, Md5};
 
 use crate::{
-    grid::{IntoVector, Vector, Z},
+    grid::{Vector, Z},
     search,
 };
 
@@ -24,25 +24,25 @@ fn adjacent(input: &str, state: &State, push: &mut dyn FnMut(State)) {
     if state.pos.y > 0 && hash[0] >> 4 > 10 {
         let mut state = state.clone();
         state.path.push('U');
-        state.pos += 'U'.into_vector();
+        state.pos += crate::cast::char_to_vector('U');
         push(state);
     }
     if state.pos.y < 3 && hash[0] & 0xf > 10 {
         let mut state = state.clone();
         state.path.push('D');
-        state.pos += 'D'.into_vector();
+        state.pos += crate::cast::char_to_vector('D');
         push(state);
     }
     if state.pos.x > 0 && hash[1] >> 4 > 10 {
         let mut state = state.clone();
         state.path.push('L');
-        state.pos += 'L'.into_vector();
+        state.pos += crate::cast::char_to_vector('L');
         push(state);
     }
     if state.pos.x < 3 && hash[1] & 0xf > 10 {
         let mut state = state.clone();
         state.path.push('R');
-        state.pos += 'R'.into_vector();
+        state.pos += crate::cast::char_to_vector('R');
         push(state);
     }
 }

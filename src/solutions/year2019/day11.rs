@@ -31,10 +31,11 @@ pub fn part1(input: &str) -> usize {
 pub fn part2(input: &str) -> &str {
     let mut hull = HashMap::from([(Z, 1)]);
     paint(input, &mut hull);
-    crate::ocr::parse(
-        hull.iter()
+    crate::ocr::parse(&crate::cast::vector_hash_set_to_string(
+        &hull
+            .iter()
             .filter(|&(_, &paint)| paint == 1)
             .map(|(&pos, _)| pos)
             .collect::<HashSet<_>>(),
-    )
+    ))
 }

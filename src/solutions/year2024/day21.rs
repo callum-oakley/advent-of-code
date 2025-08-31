@@ -1,7 +1,7 @@
 use std::{collections::HashMap, sync::LazyLock};
 
 use crate::{
-    grid::{self, IntoVector, Vector},
+    grid::{self, Vector},
     search,
 };
 
@@ -41,7 +41,7 @@ fn key_cost(
                 },
                 |state, push| {
                     for dir in "^>v<".chars() {
-                        let pos = state.pos + dir.into_vector();
+                        let pos = state.pos + crate::cast::char_to_vector(dir);
                         if keypad.contains_key(&pos) {
                             let mut code = state.code.clone();
                             code.push(dir);

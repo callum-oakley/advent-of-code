@@ -3,7 +3,7 @@ use std::{
     sync::LazyLock,
 };
 
-use crate::grid::{IntoVector, Vector, E, N, S};
+use crate::grid::{Vector, E, N, S};
 
 static ROCKS: LazyLock<Vec<Vec<Vector>>> = LazyLock::new(|| {
     "####\n\n.#.\n###\n.#.\n\n..#\n..#\n###\n\n#\n#\n#\n#\n\n##\n##"
@@ -23,7 +23,7 @@ static ROCKS: LazyLock<Vec<Vec<Vector>>> = LazyLock::new(|| {
 });
 
 fn parse(input: &str) -> Vec<Vector> {
-    input.chars().map(IntoVector::into_vector).collect()
+    input.chars().map(crate::cast::char_to_vector).collect()
 }
 
 fn push(tower: &HashSet<Vector>, rock: &[Vector], dir: Vector) -> Option<Vec<Vector>> {

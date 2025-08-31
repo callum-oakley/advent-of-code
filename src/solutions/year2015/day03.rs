@@ -1,12 +1,12 @@
 use std::{collections::HashSet, iter::once};
 
-use crate::grid::{IntoVector, Vector, Z};
+use crate::grid::{Vector, Z};
 
 fn deliver(dirs: impl Iterator<Item = char>) -> HashSet<Vector> {
     let mut santa = Z;
     once(santa)
         .chain(dirs.map(|c| {
-            santa += c.into_vector();
+            santa += crate::cast::char_to_vector(c);
             santa
         }))
         .collect()

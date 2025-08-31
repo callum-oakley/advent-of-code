@@ -6,7 +6,7 @@ use std::{
 use anyhow::{Context, Result};
 
 use crate::{
-    grid::{self, Adjacent, IntoVector, Vector, LEFT, RIGHT},
+    grid::{self, Adjacent, Vector, LEFT, RIGHT},
     intcode::{State, VM},
 };
 
@@ -51,7 +51,7 @@ fn parse(map: &str) -> (HashSet<Vector>, Robot) {
             scaffold.insert(pos);
             robot = Some(Robot {
                 pos,
-                dir: c.into_vector(),
+                dir: crate::cast::char_to_vector(c),
             });
         }
         '.' => {}

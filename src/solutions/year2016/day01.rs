@@ -1,11 +1,11 @@
 use std::collections::HashSet;
 
-use crate::grid::{IntoTurn, Turn, N, Z};
+use crate::grid::{Turn, N, Z};
 
 fn parse(input: &str) -> impl Iterator<Item = (Turn, i64)> + '_ {
     input.split(", ").map(|instruction| {
         (
-            instruction[0..1].into_turn(),
+            crate::cast::string_to_turn(&instruction[0..1]),
             instruction[1..].parse().unwrap(),
         )
     })

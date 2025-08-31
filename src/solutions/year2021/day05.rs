@@ -1,12 +1,12 @@
-use crate::{
-    freqs::Freqs,
-    grid::{IntoVector, Vector},
-};
+use crate::{freqs::Freqs, grid::Vector};
 
-fn parse(input: &str) -> impl Iterator<Item = (Vector, Vector)> + '_ {
+fn parse(input: &str) -> impl Iterator<Item = (Vector, Vector)> {
     input.trim().lines().map(|line| {
         let (s, t) = line.split_once("->").unwrap();
-        (s.into_vector(), t.into_vector())
+        (
+            crate::cast::string_to_vector(s),
+            crate::cast::string_to_vector(t),
+        )
     })
 }
 

@@ -1,11 +1,11 @@
 use std::collections::HashMap;
 
-use crate::grid::{IntoVector, Vector, E, N, NE, NW, S, SE, SW, W, Z};
+use crate::grid::{Vector, E, N, NE, NW, S, SE, SW, W, Z};
 
 fn parse(input: &str) -> impl Iterator<Item = impl Iterator<Item = Vector> + '_> + '_ {
     input
         .split_whitespace()
-        .map(|s| s.chars().map(IntoVector::into_vector))
+        .map(|s| s.chars().map(crate::cast::char_to_vector))
 }
 
 fn part_(keypad: &HashMap<Vector, char>, input: &str) -> String {

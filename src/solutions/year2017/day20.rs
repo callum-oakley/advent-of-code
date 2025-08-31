@@ -1,13 +1,11 @@
 use std::collections::HashMap;
 
-use nalgebra::Vector3;
-
-use crate::grid::IntoVector;
+use crate::grid::Vector3;
 
 struct Particle {
-    p: Vector3<i32>,
-    v: Vector3<i32>,
-    a: Vector3<i32>,
+    p: Vector3,
+    v: Vector3,
+    a: Vector3,
 }
 
 impl Particle {
@@ -21,9 +19,9 @@ impl From<&str> for Particle {
     fn from(s: &str) -> Self {
         let mut points = s.split(", ");
         Particle {
-            p: points.next().unwrap().into_vector(),
-            v: points.next().unwrap().into_vector(),
-            a: points.next().unwrap().into_vector(),
+            p: crate::cast::string_to_vector3(points.next().unwrap()),
+            v: crate::cast::string_to_vector3(points.next().unwrap()),
+            a: crate::cast::string_to_vector3(points.next().unwrap()),
         }
     }
 }

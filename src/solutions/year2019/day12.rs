@@ -1,19 +1,18 @@
-use nalgebra::Vector3;
 use num::Integer;
 
-use crate::grid::IntoVector;
+use crate::grid::Vector3;
 
 #[derive(Clone)]
 struct Moon {
-    pos: Vector3<i32>,
-    vel: Vector3<i32>,
+    pos: Vector3,
+    vel: Vector3,
 }
 
 fn parse(input: &str) -> Vec<Moon> {
     input
         .lines()
         .map(|line| Moon {
-            pos: line.into_vector(),
+            pos: crate::cast::string_to_vector3(line),
             vel: Vector3::zeros(),
         })
         .collect()
@@ -40,7 +39,7 @@ fn tick(system: &mut [Moon]) {
     }
 }
 
-fn part1_(steps: usize, input: &str) -> i32 {
+fn part1_(steps: usize, input: &str) -> i64 {
     let mut system = parse(input);
     for _ in 0..steps {
         tick(&mut system);
@@ -52,7 +51,7 @@ fn part1_(steps: usize, input: &str) -> i32 {
 }
 
 fn period(axis: usize, mut system: Vec<Moon>) -> usize {
-    fn fingerprint(axis: usize, system: &[Moon]) -> Vec<(i32, i32)> {
+    fn fingerprint(axis: usize, system: &[Moon]) -> Vec<(i64, i64)> {
         system
             .iter()
             .map(|moon| (moon.pos[axis], moon.vel[axis]))
@@ -70,7 +69,7 @@ fn period(axis: usize, mut system: Vec<Moon>) -> usize {
     unreachable!()
 }
 
-pub fn part1(input: &str) -> i32 {
+pub fn part1(input: &str) -> i64 {
     part1_(1000, input)
 }
 

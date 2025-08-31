@@ -2,7 +2,7 @@ use std::{collections::HashSet, sync::LazyLock};
 
 use regex::Regex;
 
-use crate::grid::{Grid, IntoVector, Vector};
+use crate::grid::{Grid, Vector};
 
 struct Claim {
     id: u32,
@@ -17,8 +17,8 @@ impl From<&str> for Claim {
         let captures = RE.captures(s).unwrap();
         Claim {
             id: captures[1].parse().unwrap(),
-            pos: captures[2].into_vector(),
-            size: captures[3].into_vector(),
+            pos: crate::cast::string_to_vector(&captures[2]),
+            size: crate::cast::string_to_vector(&captures[3]),
         }
     }
 }

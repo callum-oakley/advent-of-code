@@ -90,7 +90,10 @@ pub fn part1(input: &str) -> usize {
 }
 
 pub fn part2(input: &str) -> &str {
-    crate::ocr::parse(part_(Vector::new(50, 6), input))
+    crate::ocr::parse(&crate::cast::bool_grid_to_string(&part_(
+        Vector::new(50, 6),
+        input,
+    )))
 }
 
 pub fn tests() {
@@ -99,7 +102,7 @@ pub fn tests() {
                    rotate row y=0 by 4
                    rotate column x=1 by 1";
     assert_eq!(
-        part_(Vector::new(7, 3), example).to_string(),
+        crate::cast::bool_grid_to_string(&part_(Vector::new(7, 3), example)),
         ".#..#.#\n#.#....\n.#.....\n",
     );
 }

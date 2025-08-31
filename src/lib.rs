@@ -12,6 +12,7 @@ use std::{fs, path::Path};
 pub mod intcode;
 pub mod solutions;
 
+mod cast;
 mod combinatorics;
 mod freqs;
 mod grid;

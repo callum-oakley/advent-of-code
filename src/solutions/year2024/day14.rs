@@ -1,6 +1,6 @@
 use std::{cmp::Ordering, sync::LazyLock};
 
-use crate::grid::{Grid, IntoVector, Vector};
+use crate::grid::{Grid, Vector};
 
 struct Robot {
     p: Vector,
@@ -56,8 +56,8 @@ fn parse(input: &str) -> Vec<Robot> {
         .map(|line| {
             let (p, v) = line.trim().split_once(' ').unwrap();
             Robot {
-                p: p.into_vector(),
-                v: v.into_vector(),
+                p: crate::cast::string_to_vector(p),
+                v: crate::cast::string_to_vector(v),
             }
         })
         .collect()

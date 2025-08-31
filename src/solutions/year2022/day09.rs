@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::grid::{IntoChar, IntoVector, Vector, Z};
+use crate::grid::{Vector, Z};
 
 struct Motion {
     dir: Vector,
@@ -11,7 +11,7 @@ fn parse(input: &str) -> impl Iterator<Item = Motion> {
     input.lines().map(|line| {
         let (dir, dist) = line.split_once(' ').unwrap();
         Motion {
-            dir: dir.into_char().into_vector(),
+            dir: crate::cast::string_to_vector(dir),
             dist: dist.parse().unwrap(),
         }
     })

@@ -2,8 +2,6 @@ use std::{collections::HashSet, sync::LazyLock};
 
 use regex::Regex;
 
-use crate::grid::{Grid, Vector};
-
 enum Instruction {
     Noop,
     Addx(i64),
@@ -42,7 +40,7 @@ pub fn part1(input: &str) -> i64 {
         .sum()
 }
 
-fn part2_(input: &str) -> HashSet<Vector> {
+fn part2_(input: &str) -> String {
     let xs = cpu(input);
     let mut pixels = HashSet::new();
     for x in 0i64..40 {
@@ -52,11 +50,11 @@ fn part2_(input: &str) -> HashSet<Vector> {
             }
         }
     }
-    pixels
+    crate::cast::vector_hash_set_to_string(&pixels)
 }
 
 pub fn part2(input: &str) -> &str {
-    crate::ocr::parse(part2_(input))
+    crate::ocr::parse(&part2_(input))
 }
 
 pub fn tests() {
@@ -83,5 +81,5 @@ pub fn tests() {
         "######......######......######......####\n",
         "#######.......#######.......#######.....\n",
     );
-    assert_eq!(Grid::from(part2_(example)).to_string(), image);
+    assert_eq!(part2_(example), image);
 }

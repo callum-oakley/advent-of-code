@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use regex::Regex;
 
-use crate::grid::{Bounds, IntoVector, Vector};
+use crate::grid::{Bounds, Vector};
 
 struct Light {
     position: Vector,
@@ -14,8 +14,8 @@ fn parse(input: &str) -> Vec<Light> {
         .unwrap()
         .captures_iter(input)
         .map(|captures| Light {
-            position: captures[1].into_vector(),
-            velocity: captures[2].into_vector(),
+            position: crate::cast::string_to_vector(&captures[1]),
+            velocity: crate::cast::string_to_vector(&captures[2]),
         })
         .collect()
 }
@@ -48,12 +48,12 @@ fn part_(input: &str) -> (&str, usize) {
         } else {
             untick(&mut lights);
             return (
-                crate::ocr::parse(
-                    lights
+                crate::ocr::parse(&crate::cast::vector_hash_set_to_string(
+                    &lights
                         .iter()
                         .map(|light| light.position)
                         .collect::<HashSet<_>>(),
-                ),
+                )),
                 t,
             );
         }

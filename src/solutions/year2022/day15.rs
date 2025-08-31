@@ -1,9 +1,6 @@
 use regex::Regex;
 
-use crate::{
-    grid::{IntoVector, Vector},
-    uniq::Uniq,
-};
+use crate::{grid::Vector, uniq::Uniq};
 
 #[derive(Clone, Copy)]
 struct Reading {
@@ -16,8 +13,8 @@ fn parse(input: &str) -> Vec<Reading> {
         .unwrap()
         .captures_iter(input)
         .map(|captures| Reading {
-            sensor: captures[1].into_vector(),
-            beacon: captures[2].into_vector(),
+            sensor: crate::cast::string_to_vector(&captures[1]),
+            beacon: crate::cast::string_to_vector(&captures[2]),
         })
         .collect()
 }

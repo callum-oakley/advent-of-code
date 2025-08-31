@@ -1,14 +1,14 @@
 use std::collections::HashSet;
 
 use crate::{
-    grid::{Adjacent, IntoVector, Vector, Z},
+    grid::{Adjacent, Vector, Z},
     search::{self, hash_filter},
 };
 
 fn parse(input: &str) -> Vec<Vector> {
     input
         .split_whitespace()
-        .map(IntoVector::into_vector)
+        .map(crate::cast::string_to_vector)
         .collect()
 }
 

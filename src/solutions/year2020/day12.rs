@@ -1,5 +1,5 @@
 use crate::{
-    grid::{IntoTurn, IntoVector, E, N, Z},
+    grid::{E, N, Z},
     part::Part,
 };
 
@@ -14,10 +14,12 @@ fn part_(part: Part, input: &str) -> i64 {
         let n: i64 = line[1..].parse().unwrap();
         match c {
             'N' | 'E' | 'S' | 'W' => match part {
-                Part::One => pos += n * c.into_vector(),
-                Part::Two => dir += n * c.into_vector(),
+                Part::One => pos += n * crate::cast::char_to_vector(c),
+                Part::Two => dir += n * crate::cast::char_to_vector(c),
             },
-            'L' | 'R' => dir = c.into_turn().pow(u32::try_from(n).unwrap() / 90) * dir,
+            'L' | 'R' => {
+                dir = crate::cast::char_to_turn(c).pow(u32::try_from(n).unwrap() / 90) * dir;
+            }
             'F' => pos += n * dir,
             _ => unreachable!(),
         }

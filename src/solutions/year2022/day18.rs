@@ -1,11 +1,15 @@
 use std::collections::HashSet;
 
-use nalgebra::{vector, Vector3};
+use nalgebra::vector;
 
-use crate::grid::{Adjacent3, Bounds, IntoVector};
+use crate::grid::{Adjacent3, Bounds, Vector3};
 
-fn parse(input: &str) -> HashSet<Vector3<i64>> {
-    input.trim().lines().map(IntoVector::into_vector).collect()
+fn parse(input: &str) -> HashSet<Vector3> {
+    input
+        .trim()
+        .lines()
+        .map(crate::cast::string_to_vector3)
+        .collect()
 }
 
 pub fn part1(input: &str) -> usize {

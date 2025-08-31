@@ -1,5 +1,5 @@
 use crate::{
-    grid::{Grid, IntoVector, Vector, E, W},
+    grid::{Grid, Vector, E, W},
     search,
 };
 
@@ -9,7 +9,7 @@ fn parse(input: &str) -> (Grid<char>, impl Iterator<Item = Vector> + '_) {
         Grid::parse(warehouse, |_, c| c),
         dirs.chars()
             .filter(|&c| "^>v<".contains(c))
-            .map(IntoVector::into_vector),
+            .map(crate::cast::char_to_vector),
     )
 }
 

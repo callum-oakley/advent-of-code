@@ -1,6 +1,6 @@
 use nalgebra::vector;
 
-use crate::grid::{IntoVector, Vector};
+use crate::grid::Vector;
 
 #[derive(Clone, Copy)]
 struct Machine {
@@ -11,7 +11,7 @@ struct Machine {
 
 fn parse(input: &str) -> impl Iterator<Item = Machine> + '_ {
     input.trim().split("\n\n").map(|s| {
-        let mut vectors = s.lines().map(IntoVector::into_vector);
+        let mut vectors = s.lines().map(crate::cast::string_to_vector);
         Machine {
             a: vectors.next().unwrap(),
             b: vectors.next().unwrap(),

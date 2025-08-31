@@ -1,12 +1,10 @@
 use std::collections::HashSet;
 
-use nalgebra::Vector4;
-
-use crate::grid::IntoVector;
+use crate::grid::Vector4;
 
 pub fn part1(input: &str) -> usize {
-    let mut constellations: Vec<HashSet<Vector4<i32>>> = Vec::new();
-    for point in input.lines().map(IntoVector::into_vector) {
+    let mut constellations: Vec<HashSet<Vector4>> = Vec::new();
+    for point in input.lines().map(crate::cast::string_to_vector4) {
         let mut connected = HashSet::from([point]);
         let mut i = 0;
         while i < constellations.len() {

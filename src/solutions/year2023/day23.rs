@@ -1,7 +1,7 @@
 use std::collections::{HashMap, HashSet};
 
 use crate::{
-    grid::{Adjacent, Grid, IntoVector, Vector},
+    grid::{Adjacent, Grid, Vector},
     search,
 };
 
@@ -16,7 +16,7 @@ fn parse(input: &str) -> Grid<Tile> {
     Grid::parse(input, |_, c| match c {
         '.' => Tile::Path,
         '#' => Tile::Forest,
-        '^' | '<' | '>' | 'v' => Tile::Slope(c.into_vector()),
+        '^' | '<' | '>' | 'v' => Tile::Slope(crate::cast::char_to_vector(c)),
         _ => unreachable!(),
     })
 }

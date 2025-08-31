@@ -1,7 +1,7 @@
 use std::collections::{HashSet, VecDeque};
 
 use crate::{
-    grid::{Bounds, IntoVector, Vector, N, NE, NW, S, SE, SW},
+    grid::{Bounds, Vector, N, NE, NW, S, SE, SW},
     part::Part,
 };
 
@@ -11,7 +11,7 @@ fn parse(input: &str) -> HashSet<Vector> {
         let points: Vec<Vector> = line
             .trim()
             .split(" -> ")
-            .map(IntoVector::into_vector)
+            .map(crate::cast::string_to_vector)
             .collect();
         for pair in points.windows(2) {
             rock.extend(crate::grid::line_segment(pair[0], pair[1]));

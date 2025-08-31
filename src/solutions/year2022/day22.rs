@@ -3,7 +3,7 @@ use std::{collections::HashMap, sync::LazyLock};
 use nalgebra::vector;
 use regex::Regex;
 
-use crate::grid::{IntoChar, IntoTurn, Turn, Vector, E, N, S, SE, W};
+use crate::grid::{Turn, Vector, E, N, S, SE, W};
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 enum Tile {
@@ -45,7 +45,7 @@ fn parse(input: &str) -> (HashMap<Vector, Tile>, impl Iterator<Item = Instructio
     let instructions = INSTRUCTION.find_iter(instructions).map(|m| {
         let m = m.as_str();
         match m {
-            "L" | "R" => Instruction::Turn(m.into_turn()),
+            "L" | "R" => Instruction::Turn(crate::cast::string_to_turn(m)),
             _ => Instruction::Forward(m.parse().unwrap()),
         }
     });
@@ -87,7 +87,7 @@ fn step(
 // and then we can generate the full mapping from the seven joins between faces.
 fn portals(side_len: i64, sides: &[(State, State)]) -> HashMap<State, State> {
     fn edge(side_len: i64, face: Vector, dir: Vector) -> impl DoubleEndedIterator<Item = Vector> {
-        let (s, t) = match dir.into_char() {
+        let (s, t) = match crate::cast::vector_to_char(dir) {
             'N' => (face * side_len, (face + E) * side_len - E),
             'E' => ((face + E) * side_len - E, (face + SE) * side_len - SE),
             'S' => ((face + SE) * side_len - SE, (face + S) * side_len - S),
@@ -137,7 +137,7 @@ fn part_(portals: Option<&HashMap<State, State>>, input: &str) -> i64 {
         }
     }
 
-    let facing = match state.dir.into_char() {
+    let facing = match crate::cast::vector_to_char(state.dir) {
         'E' => 0,
         'S' => 1,
         'W' => 2,

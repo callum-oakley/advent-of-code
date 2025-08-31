@@ -1,6 +1,6 @@
 use nalgebra::{matrix, vector, Vector2, Vector3};
 
-use crate::{combinatorics, grid::IntoVector};
+use crate::combinatorics;
 
 #[derive(Clone, Copy)]
 struct Stone {
@@ -36,8 +36,8 @@ fn parse(input: &str) -> impl Iterator<Item = Stone> + '_ {
     input.trim().lines().map(|l| {
         let (p, v) = l.split_once('@').unwrap();
         Stone {
-            p: p.into_vector(),
-            v: v.into_vector(),
+            p: Vector3::from_iterator(crate::cast::string_to_ints(p)),
+            v: Vector3::from_iterator(crate::cast::string_to_ints(v)),
         }
     })
 }

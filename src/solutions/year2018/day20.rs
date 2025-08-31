@@ -1,7 +1,7 @@
 use std::collections::{HashMap, HashSet};
 
 use crate::{
-    grid::{IntoVector, Vector, Z},
+    grid::{Vector, Z},
     search,
 };
 
@@ -33,7 +33,7 @@ fn expand(input: &str) -> HashMap<Vector, HashSet<Vector>> {
                 forks.pop().unwrap();
             }
             _ => {
-                let dir = c.into_vector();
+                let dir = crate::cast::char_to_vector(c);
                 // Insert all the doors that must exist to move in this direction from the active
                 // positions
                 for &pos in &active {

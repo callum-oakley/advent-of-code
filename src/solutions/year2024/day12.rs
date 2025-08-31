@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use crate::{
-    grid::{self, Adjacent, IntoVector, Vector},
+    grid::{self, Adjacent, Vector},
     search,
 };
 
@@ -17,10 +17,9 @@ fn perimeter(region: &HashSet<(Vector, char)>) -> HashSet<(Vector, char)> {
     region
         .iter()
         .flat_map(|&(v, crop)| {
-            "NESW"
-                .chars()
-                .map(move |c| (v, c))
-                .filter(move |&(u, c)| !region.contains(&(u + c.into_vector(), crop)))
+            "NESW".chars().map(move |c| (v, c)).filter(move |&(u, c)| {
+                !region.contains(&(u + crate::cast::char_to_vector(c), crop))
+            })
         })
         .collect()
 }

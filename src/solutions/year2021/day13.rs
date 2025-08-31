@@ -2,7 +2,7 @@ use std::{collections::HashSet, sync::LazyLock};
 
 use regex::Regex;
 
-use crate::grid::{IntoVector, Vector};
+use crate::grid::Vector;
 
 #[derive(Clone, Copy)]
 struct Fold {
@@ -15,7 +15,7 @@ fn parse(input: &str) -> (HashSet<Vector>, impl Iterator<Item = Fold> + '_) {
     let (dots, folds) = input.split_once("\n\n").unwrap();
     (
         dots.split_whitespace()
-            .map(IntoVector::into_vector)
+            .map(crate::cast::string_to_vector)
             .collect(),
         RE.captures_iter(folds).map(|captures| Fold {
             axis: match &captures[1] {
@@ -46,7 +46,9 @@ pub fn part1(input: &str) -> usize {
 
 pub fn part2(input: &str) -> &str {
     let (dots, folds) = parse(input);
-    crate::ocr::parse(folds.fold(dots, |d, f| apply_fold(&d, f)))
+    crate::ocr::parse(&crate::cast::vector_hash_set_to_string(
+        &folds.fold(dots, |d, f| apply_fold(&d, f)),
+    ))
 }
 
 pub fn tests() {

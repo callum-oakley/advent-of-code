@@ -1,5 +1,5 @@
 use crate::{
-    grid::{Grid, IntoVector, Vector, LEFT, RIGHT},
+    grid::{Grid, Vector, LEFT, RIGHT},
     part::Part,
 };
 
@@ -63,7 +63,7 @@ fn parse(input: &str) -> (Grid<Tile>, Vec<Cart>) {
         '^' | 'v' | '<' | '>' => {
             carts.push(Cart {
                 pos,
-                dir: c.into_vector(),
+                dir: crate::cast::char_to_vector(c),
                 turn_count: 0,
             });
             Tile::Straight

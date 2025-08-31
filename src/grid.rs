@@ -1,16 +1,15 @@
 use std::{
     collections::{BTreeMap, BTreeSet, HashMap, HashSet},
-    fmt::{self, Write},
     iter,
     ops::{Index, IndexMut},
-    str::FromStr,
-    sync::LazyLock,
 };
 
-use nalgebra::{SVector, Scalar, Vector3, vector};
-use regex::Regex;
+use nalgebra::SVector;
 
 pub type Vector = nalgebra::Vector2<i64>;
+pub type Vector3 = nalgebra::Vector3<i64>;
+pub type Vector4 = nalgebra::Vector4<i64>;
+
 pub type Turn = nalgebra::Matrix2<i64>;
 
 pub const NW: Vector = Vector::new(-1, -1);
@@ -51,11 +50,11 @@ impl Adjacent for Vector {
 }
 
 pub trait Adjacent3 {
-    fn adjacent6(self) -> impl Iterator<Item = Vector3<i64>>;
+    fn adjacent6(self) -> impl Iterator<Item = Vector3>;
 }
 
-impl Adjacent3 for Vector3<i64> {
-    fn adjacent6(self) -> impl Iterator<Item = Vector3<i64>> {
+impl Adjacent3 for Vector3 {
+    fn adjacent6(self) -> impl Iterator<Item = Vector3> {
         (0..3).flat_map(move |axis| {
             [1, -1].into_iter().map(move |sign| {
                 let mut v = self;
@@ -74,143 +73,6 @@ pub fn line_segment(s: Vector, t: Vector) -> impl DoubleEndedIterator<Item = Vec
     let len = (t - s).abs().max();
     let dir = (t - s) / len;
     (0..=len).map(move |i| s + i * dir)
-}
-
-pub trait IntoVector<T, const D: usize> {
-    fn into_vector(self) -> SVector<T, D>;
-}
-
-impl IntoVector<i64, 2> for char {
-    fn into_vector(self) -> Vector {
-        match self {
-            'N' | 'U' | '^' => N,
-            'E' | 'R' | '>' => E,
-            'S' | 'D' | 'v' => S,
-            'W' | 'L' | '<' => W,
-            _ => panic!("don't know how to convert {self} into a vector"),
-        }
-    }
-}
-
-impl<T, const D: usize> IntoVector<T, D> for &str
-where
-    T: Scalar + FromStr,
-    T::Err: fmt::Debug,
-{
-    fn into_vector(self) -> SVector<T, D> {
-        static INTS: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"-?\d+").unwrap());
-        SVector::from_iterator(INTS.find_iter(self).map(|m| m.as_str().parse().unwrap()))
-    }
-}
-
-pub trait IntoTurn {
-    fn into_turn(self) -> Turn;
-}
-
-impl IntoTurn for char {
-    fn into_turn(self) -> Turn {
-        match self {
-            'L' => LEFT,
-            'R' => RIGHT,
-            _ => panic!("don't know how to convert {self} into a turn"),
-        }
-    }
-}
-
-impl IntoTurn for &str {
-    fn into_turn(self) -> Turn {
-        self.chars().next().unwrap().into_turn()
-    }
-}
-
-pub trait IntoChar {
-    fn into_char(self) -> char;
-}
-
-impl IntoChar for &char {
-    fn into_char(self) -> char {
-        *self
-    }
-}
-
-impl IntoChar for &bool {
-    fn into_char(self) -> char {
-        if *self { '#' } else { '.' }
-    }
-}
-
-impl IntoChar for &Vector {
-    fn into_char(self) -> char {
-        if *self == N {
-            'N'
-        } else if *self == W {
-            'W'
-        } else if *self == Z {
-            'Z'
-        } else if *self == E {
-            'E'
-        } else if *self == S {
-            'S'
-        } else {
-            panic!("don't know how to convert {self} into a char")
-        }
-    }
-}
-
-impl IntoChar for &Turn {
-    fn into_char(self) -> char {
-        if *self == LEFT {
-            'L'
-        } else if *self == RIGHT {
-            'R'
-        } else {
-            panic!("don't know how to convert {self} into a char")
-        }
-    }
-}
-
-impl IntoChar for &str {
-    fn into_char(self) -> char {
-        let mut chars = self.chars();
-        let c = chars.next().unwrap();
-        assert!(chars.next().is_none());
-        c
-    }
-}
-
-pub trait IntoString {
-    fn into_string(self) -> String;
-}
-
-impl IntoString for HashSet<Vector> {
-    fn into_string(self) -> String {
-        let bounds = Bounds::from(&self);
-        let mut res = String::new();
-        for y in bounds.min.y..=bounds.max.y {
-            for x in bounds.min.x..=bounds.max.x {
-                res.push(self.contains(&vector![x, y]).into_char());
-            }
-            res.push('\n');
-        }
-        res
-    }
-}
-
-impl<C> IntoString for HashMap<Vector, C>
-where
-    for<'a> &'a C: IntoChar,
-{
-    fn into_string(self) -> String {
-        let bounds = Bounds::from(&self);
-        let mut res = String::new();
-        for y in bounds.min.y..=bounds.max.y {
-            for x in bounds.min.x..=bounds.max.x {
-                res.push(self[&vector![x, y]].into_char());
-            }
-            res.push('\n');
-        }
-        res
-    }
 }
 
 pub fn scan(s: &str) -> impl Iterator<Item = (Vector, char)> {
@@ -422,21 +284,6 @@ impl<'a, T> IntoIterator for &'a Grid<T> {
     }
 }
 
-impl<T> fmt::Display for Grid<T>
-where
-    for<'a> &'a T: IntoChar,
-{
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        for y in 0..self.size.y {
-            for x in 0..self.size.x {
-                f.write_char(self[[x, y]].into_char())?;
-            }
-            f.write_char('\n')?;
-        }
-        Ok(())
-    }
-}
-
 impl<I> From<I> for Grid<bool>
 where
     I: IntoIterator<Item = Vector> + Clone,
@@ -454,21 +301,5 @@ where
 impl Grid<bool> {
     pub fn points(&self) -> impl Iterator<Item = Vector> + '_ {
         self.keys().filter(|&v| self[v])
-    }
-}
-
-impl<C> IntoString for Grid<C>
-where
-    for<'a> &'a C: IntoChar,
-{
-    fn into_string(self) -> String {
-        let mut res = String::new();
-        for y in 0..self.size.y {
-            for x in 0..self.size.x {
-                res.push(self[vector![x, y]].into_char());
-            }
-            res.push('\n');
-        }
-        res
     }
 }

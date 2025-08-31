@@ -1,5 +1,5 @@
 use crate::{
-    grid::{Grid, IntoChar, Turn, Vector, E, LEFT, N, RIGHT, S, W, Z},
+    grid::{Grid, Turn, Vector, E, LEFT, N, RIGHT, S, W, Z},
     search,
     uniq::Uniq,
 };
@@ -31,7 +31,7 @@ fn energize(tiles: &Grid<char>, beam: Packet) -> usize {
         beam,
         |&packet, push| {
             if let Some(tile) = tiles.get(packet.pos) {
-                match (tile, packet.dir.into_char()) {
+                match (tile, crate::cast::vector_to_char(packet.dir)) {
                     ('.', _) | ('|', 'N' | 'S') | ('-', 'E' | 'W') => push(packet.tick()),
                     ('\\', 'N' | 'S') | ('/', 'E' | 'W') => push(packet.turn(LEFT).tick()),
                     ('\\', 'E' | 'W') | ('/', 'N' | 'S') => push(packet.turn(RIGHT).tick()),

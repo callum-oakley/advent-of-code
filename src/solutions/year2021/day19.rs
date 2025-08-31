@@ -1,20 +1,18 @@
 use std::{collections::HashMap, sync::LazyLock};
 
-use crate::{freqs::Freqs, uniq::Uniq};
-
-type Vector = nalgebra::Vector3<i32>;
+use crate::{freqs::Freqs, grid::Vector3, uniq::Uniq};
 
 struct Scanner {
-    position: Vector,
-    beacons: Vec<Vector>,
+    position: Vector3,
+    beacons: Vec<Vector3>,
     // Frequencies of distances between each pair of beacons.
-    fingerprint: HashMap<i32, usize>,
+    fingerprint: HashMap<i64, usize>,
 }
 
 impl Scanner {
-    fn new(beacons: Vec<Vector>) -> Self {
+    fn new(beacons: Vec<Vector3>) -> Self {
         Self {
-            position: Vector::zeros(),
+            position: Vector3::zeros(),
             fingerprint: crate::combinatorics::combinations(2, &beacons)
                 .map(|pair| (pair[0] - pair[1]).abs().sum())
                 .freqs(),
@@ -23,7 +21,7 @@ impl Scanner {
     }
 }
 
-static ROTATIONS: LazyLock<[nalgebra::Matrix3<i32>; 24]> = LazyLock::new(|| {
+static ROTATIONS: LazyLock<[nalgebra::Matrix3<i64>; 24]> = LazyLock::new(|| {
     let i = nalgebra::matrix![1, 0, 0; 0, 1, 0; 0, 0, 1];
     let x = nalgebra::matrix![1, 0, 0; 0, 0, -1; 0, 1, 0];
     let y = nalgebra::matrix![0, 0, 1; 0, 1, 0; -1, 0, 0];
@@ -61,7 +59,7 @@ fn parse(input: &str) -> impl Iterator<Item = Scanner> {
             scanner
                 .lines()
                 .skip(1)
-                .map(crate::grid::IntoVector::into_vector)
+                .map(crate::cast::string_to_vector3)
                 .collect(),
         )
     })
@@ -69,14 +67,14 @@ fn parse(input: &str) -> impl Iterator<Item = Scanner> {
 
 // The distances between pairs of beacons doesn't depend on the position or orientation of the
 // scanner, so if two scanners share 12 beacons, they must share 12 choose 2 = 66 distances.
-fn fingerprints_match(a: &HashMap<i32, usize>, b: &HashMap<i32, usize>) -> bool {
+fn fingerprints_match(a: &HashMap<i64, usize>, b: &HashMap<i64, usize>) -> bool {
     a.iter()
         .filter_map(|(dist, freq_a)| b.get(dist).map(|freq_b| freq_a.min(freq_b)))
         .sum::<usize>()
         >= 66
 }
 
-fn offset(beacons0: &[Vector], beacons1: &[Vector]) -> Option<Vector> {
+fn offset(beacons0: &[Vector3], beacons1: &[Vector3]) -> Option<Vector3> {
     beacons0
         .iter()
         .flat_map(|&b0| beacons1.iter().map(move |&b1| b0 - b1))
@@ -93,7 +91,7 @@ fn fix(fixed_scanners: &[Scanner], floating_scanners: &mut Vec<Scanner>) -> Opti
                 continue;
             }
             for rotation in ROTATIONS.iter() {
-                let floating_beacons: Vec<Vector> = floating_scanner
+                let floating_beacons: Vec<Vector3> = floating_scanner
                     .beacons
                     .iter()
                     .map(|b| rotation * b)
@@ -129,8 +127,8 @@ pub fn part1(input: &str) -> usize {
         .count()
 }
 
-pub fn part2(input: &str) -> i32 {
-    let scanners: Vec<Vector> = part_(input).iter().map(|s| s.position).collect();
+pub fn part2(input: &str) -> i64 {
+    let scanners: Vec<Vector3> = part_(input).iter().map(|s| s.position).collect();
     scanners
         .iter()
         .flat_map(|a| scanners.iter().map(move |b| (a - b).abs().sum()))

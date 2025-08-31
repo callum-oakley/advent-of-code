@@ -2,7 +2,7 @@ use std::sync::LazyLock;
 
 use regex::Regex;
 
-use crate::grid::{IntoVector, Vector};
+use crate::grid::Vector;
 
 enum Op {
     On,
@@ -27,8 +27,8 @@ fn parse(s: &str) -> impl Iterator<Item = Instruction> + '_ {
             "toggle" => Op::Toggle,
             _ => unreachable!(),
         },
-        from: captures[2].into_vector(),
-        to: captures[3].into_vector(),
+        from: crate::cast::string_to_vector(&captures[2]),
+        to: crate::cast::string_to_vector(&captures[3]),
     })
 }
 
