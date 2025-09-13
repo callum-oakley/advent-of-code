@@ -219,6 +219,7 @@ pub mod year2022 {
     pub mod day20;
     pub mod day21;
     pub mod day22;
+    pub mod day23;
 }
 
 pub mod year2023 {
@@ -2061,6 +2062,15 @@ pub fn build() -> BTreeMap<u16, BTreeMap<u8, Solution>> {
             part1: Some(|input| year2022::day22::part1(input).to_string()),
             part2: Some(|input| year2022::day22::part2(input).to_string()),
             tests: Some(year2022::day22::tests),
+        },
+    );
+
+    solutions.entry(2022).or_default().insert(
+        23,
+        Solution {
+            part1: Some(|input| year2022::day23::part1(input).to_string()),
+            part2: Some(|input| year2022::day23::part2(input).to_string()),
+            tests: Some(year2022::day23::tests),
         },
     );
 

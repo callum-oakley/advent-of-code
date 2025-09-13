@@ -79,6 +79,13 @@ pub fn bool_grid_to_string(g: &Grid<bool>) -> String {
     res
 }
 
+pub fn string_to_vector_hash_set(s: &str) -> HashSet<Vector> {
+    crate::grid::scan(s)
+        .filter(|&(_, c)| c == '#')
+        .map(|(v, _)| v)
+        .collect()
+}
+
 pub fn vector_hash_set_to_string(g: &HashSet<Vector>) -> String {
     let bounds = Bounds::from(g);
     let mut res = String::new();
