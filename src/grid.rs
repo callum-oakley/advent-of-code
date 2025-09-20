@@ -27,6 +27,7 @@ pub const RIGHT: Turn = Turn::new(0, -1, 1, 0);
 
 pub trait Adjacent {
     fn adjacent4(self) -> impl Iterator<Item = Vector>;
+    fn adjacent5(self) -> impl Iterator<Item = Vector>;
     fn adjacent8(self) -> impl Iterator<Item = Vector>;
     fn adjacent9(self) -> impl Iterator<Item = Vector>;
 }
@@ -34,6 +35,10 @@ pub trait Adjacent {
 impl Adjacent for Vector {
     fn adjacent4(self) -> impl Iterator<Item = Vector> {
         [N, W, E, S].into_iter().map(move |dir| dir + self)
+    }
+
+    fn adjacent5(self) -> impl Iterator<Item = Vector> {
+        [N, W, Z, E, S].into_iter().map(move |dir| dir + self)
     }
 
     fn adjacent8(self) -> impl Iterator<Item = Vector> {
