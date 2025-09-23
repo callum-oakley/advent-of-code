@@ -28,16 +28,6 @@ fn parse(input: &str) -> HashMap<&str, Reaction> {
         .collect()
 }
 
-// TODO remove when i64::div_ceil is stabilised
-// https://doc.rust-lang.org/std/primitive.i64.html#method.div_ceil
-fn div_ceil(a: i64, b: i64) -> i64 {
-    if a % b == 0 {
-        a / b
-    } else {
-        a / b + 1
-    }
-}
-
 // Calculate the cost by performaing reactions in reverse, converting an amount of product in to the
 // smallest amount of reactants required to produce that much product, until we only have ORE left.
 // We can have negative quantities of chemicals during this process, which represents surplus
@@ -48,7 +38,7 @@ fn cost(reactions: &HashMap<&str, Reaction>, fuel: i64) -> i64 {
         .iter_mut()
         .find(|&(&chemical, &mut quantity)| chemical != "ORE" && quantity > 0)
     {
-        let k = div_ceil(*quantity, reactions[chemical].quantity);
+        let k = num::integer::div_ceil(*quantity, reactions[chemical].quantity);
         *quantity -= k * reactions[chemical].quantity;
         for (q, r) in &reactions[chemical].reactants {
             *chemicals.entry(r).or_default() += k * q;
