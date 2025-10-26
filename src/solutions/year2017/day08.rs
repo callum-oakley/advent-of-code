@@ -11,7 +11,7 @@ struct Instruction<'a> {
     cond_rhs: i32,
 }
 
-fn parse(input: &str) -> impl Iterator<Item = Instruction> + '_ {
+fn parse(input: &str) -> impl Iterator<Item = Instruction<'_>> + '_ {
     input.lines().map(|line| {
         let mut words = line.split_whitespace();
         Instruction {

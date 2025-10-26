@@ -22,7 +22,7 @@ struct Group<'a> {
     defending: bool,
 }
 
-fn parse_group(army: Army, s: &str) -> Group {
+fn parse_group(army: Army, s: &str) -> Group<'_> {
     static GROUP: LazyLock<Regex> = LazyLock::new(|| {
         Regex::new(
             r"(\d+) units each with (\d+) hit points (\([^)]+\) )?with an attack that does (\d+) (\w+) damage at initiative (\d+)",
@@ -59,7 +59,7 @@ fn parse_group(army: Army, s: &str) -> Group {
     }
 }
 
-fn parse(input: &str) -> Vec<Group> {
+fn parse(input: &str) -> Vec<Group<'_>> {
     let (immune_system, infection) = input.split_once("\n\n").unwrap();
     let mut groups: Vec<_> = immune_system
         .trim()

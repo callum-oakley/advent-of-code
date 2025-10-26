@@ -19,7 +19,7 @@ struct State<'a> {
     skipped: BTreeSet<&'a str>,
 }
 
-fn parse(input: &str) -> impl Iterator<Item = Blueprint> {
+fn parse(input: &str) -> impl Iterator<Item = Blueprint<'_>> {
     static ID: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"Blueprint (\d+):").unwrap());
     static ROBOT: LazyLock<Regex> =
         LazyLock::new(|| Regex::new(r"Each (\w+) robot costs ([^\.]+)\.").unwrap());

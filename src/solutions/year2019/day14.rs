@@ -7,7 +7,7 @@ struct Reaction<'a> {
     reactants: Vec<(i64, &'a str)>,
 }
 
-fn parse(input: &str) -> HashMap<&str, Reaction> {
+fn parse(input: &str) -> HashMap<&str, Reaction<'_>> {
     fn parse_quantified(s: &str) -> (i64, &str) {
         let (quantity, chemical) = s.split_once(' ').unwrap();
         (quantity.parse().unwrap(), chemical)

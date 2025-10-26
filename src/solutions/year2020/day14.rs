@@ -10,7 +10,7 @@ enum Instruction<'a> {
     Mem(u64, u64),
 }
 
-fn parse(input: &str) -> impl Iterator<Item = Instruction> {
+fn parse(input: &str) -> impl Iterator<Item = Instruction<'_>> {
     static MASK: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"mask = ([X01]+)").unwrap());
     static MEM: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"mem\[(\d+)\] = (\d+)").unwrap());
     input.trim().lines().map(|line| {

@@ -26,7 +26,7 @@ struct Sue<'a> {
     stats: HashMap<&'a str, u16>,
 }
 
-fn parse(input: &str) -> impl Iterator<Item = Sue> {
+fn parse(input: &str) -> impl Iterator<Item = Sue<'_>> {
     input.lines().map(|line| {
         let (head, tail) = line.split_once(':').unwrap();
         Sue {

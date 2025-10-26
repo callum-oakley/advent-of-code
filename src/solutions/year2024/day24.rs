@@ -27,7 +27,7 @@ struct Gate<'a> {
     op: Op,
 }
 
-fn parse(input: &str) -> (HashMap<&str, bool>, HashMap<&str, Gate>) {
+fn parse(input: &str) -> (HashMap<&str, bool>, HashMap<&str, Gate<'_>>) {
     let (init, gates) = input.trim().split_once("\n\n").unwrap();
     (
         init.lines()

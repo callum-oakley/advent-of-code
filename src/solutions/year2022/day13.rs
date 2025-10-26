@@ -24,7 +24,7 @@ fn compare(a: &Value, b: &Value) -> Ordering {
                     (None, Some(_)) => return Ordering::Less,
                     (Some(_), None) => return Ordering::Greater,
                     (Some(a), Some(b)) => match compare(a, b) {
-                        Ordering::Equal => continue,
+                        Ordering::Equal => {}
                         o => return o,
                     },
                 }

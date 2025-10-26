@@ -1,11 +1,11 @@
-use std::io::{self, Read, Write};
+use std::io::{self, BufReader, Read, Write};
 
 use anyhow::{Context, Result};
 
 use crate::intcode::{State, VM};
 
 pub fn play(vm: &mut VM, r: impl Read, mut w: impl Write) -> Result<Option<i64>> {
-    let mut input = r.bytes();
+    let mut input = BufReader::new(r).bytes();
     loop {
         match vm.state() {
             State::Input => {

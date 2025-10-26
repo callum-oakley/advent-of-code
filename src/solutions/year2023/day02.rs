@@ -7,7 +7,7 @@ struct Game<'a> {
     samples: Vec<Bag<'a>>,
 }
 
-fn parse(input: &str) -> impl Iterator<Item = Game> {
+fn parse(input: &str) -> impl Iterator<Item = Game<'_>> {
     input.lines().enumerate().map(|(i, line)| {
         let id = i + 1;
         let samples = line

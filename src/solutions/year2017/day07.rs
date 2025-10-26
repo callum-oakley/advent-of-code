@@ -7,7 +7,7 @@ struct Prog<'a> {
     children: Vec<&'a str>,
 }
 
-fn parse(input: &str) -> HashMap<&str, Prog> {
+fn parse(input: &str) -> HashMap<&str, Prog<'_>> {
     let name_re = Regex::new(r"[a-z]+").unwrap();
     let weight_re = Regex::new(r"[0-9]+").unwrap();
     input

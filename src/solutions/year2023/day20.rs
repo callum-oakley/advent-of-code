@@ -45,11 +45,12 @@ impl Circuit<'_> {
         while let Some((src, dst, signal)) = q.pop_front() {
             hook((src, dst, signal));
             if let Some(module) = self.modules.get_mut(dst)
-                && let Some(output) = module.tick(src, signal) {
-                    for &d in &module.destinations {
-                        q.push_back((dst, d, output));
-                    }
+                && let Some(output) = module.tick(src, signal)
+            {
+                for &d in &module.destinations {
+                    q.push_back((dst, d, output));
                 }
+            }
         }
     }
 
@@ -70,7 +71,7 @@ impl Circuit<'_> {
     }
 }
 
-fn parse(input: &str) -> Circuit {
+fn parse(input: &str) -> Circuit<'_> {
     let mut modules = input
         .lines()
         .map(|line| {

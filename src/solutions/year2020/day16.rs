@@ -3,7 +3,7 @@ use std::collections::{HashMap, HashSet};
 type Rules<'a> = HashMap<&'a str, Vec<(i64, i64)>>;
 type Ticket = Vec<i64>;
 
-fn parse_rules(input: &str) -> Rules {
+fn parse_rules(input: &str) -> Rules<'_> {
     input
         .lines()
         .map(|line| {
@@ -29,7 +29,7 @@ fn parse_ticket(input: &str) -> Ticket {
         .collect()
 }
 
-fn parse(input: &str) -> (Rules, Ticket, Vec<Ticket>) {
+fn parse(input: &str) -> (Rules<'_>, Ticket, Vec<Ticket>) {
     let mut sections = input.trim().split("\n\n");
     (
         parse_rules(sections.next().unwrap()),

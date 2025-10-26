@@ -34,7 +34,7 @@ impl<'a> Fs<'a> {
     }
 }
 
-fn parse(input: &str) -> Fs {
+fn parse(input: &str) -> Fs<'_> {
     let mut fs = Fs::Dir(HashMap::new());
     let mut cwd = Vec::new();
     let mut lines = input.lines().peekable();

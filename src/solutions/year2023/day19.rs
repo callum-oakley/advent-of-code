@@ -64,7 +64,7 @@ impl<'a> Workflow<'a> {
         unreachable!()
     }
 
-    fn process_range(&self, part_range: &PartRange<'a>) -> Vec<(&'a str, PartRange)> {
+    fn process_range(&self, part_range: &PartRange<'a>) -> Vec<(&'a str, PartRange<'_>)> {
         let mut res = Vec::new();
         let mut part_range = part_range.clone();
         for &(condition, dest) in &self.steps {
@@ -107,7 +107,7 @@ impl<'a> Workflow<'a> {
     }
 }
 
-fn parse(input: &str) -> (HashMap<&str, Workflow>, Vec<Part>) {
+fn parse(input: &str) -> (HashMap<&str, Workflow<'_>>, Vec<Part<'_>>) {
     let re = Regex::new(r"(\w*)\{([^{}]*)\}").unwrap();
     let (workflows, parts) = input.split_once("\n\n").unwrap();
     (

@@ -1,4 +1,4 @@
-use std::io::{Read, Write};
+use std::io::{BufReader, Read, Write};
 
 use anyhow::{Context, Result};
 use regex::Regex;
@@ -7,7 +7,7 @@ use crate::intcode::{State, VM};
 
 pub fn play(prog: &str, r: impl Read, mut w: impl Write) -> Result<()> {
     let mut vm = VM::new(prog);
-    let mut input = r.bytes();
+    let mut input = BufReader::new(r).bytes();
     loop {
         match vm.state() {
             State::Input => {

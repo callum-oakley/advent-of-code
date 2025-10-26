@@ -31,7 +31,7 @@ enum Gate<'a> {
 
 type Circuit<'a> = HashMap<Wire<'a>, Gate<'a>>;
 
-fn parse(input: &str) -> Circuit {
+fn parse(input: &str) -> Circuit<'_> {
     let noop = Regex::new(r"^(\w+) -> (\w+)$").unwrap();
     let not = Regex::new(r"^NOT (\w+) -> (\w+)$").unwrap();
     let binop = Regex::new(r"^(\w+) (\w+) (\w+) -> (\w+)$").unwrap();
