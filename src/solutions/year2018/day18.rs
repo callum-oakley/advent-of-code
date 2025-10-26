@@ -42,7 +42,7 @@ fn tick(state: &Grid<Tile>) -> Grid<Tile> {
                     res[pos] = Tile::Open;
                 }
             }
-        };
+        }
     }
     res
 }

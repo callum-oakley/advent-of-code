@@ -79,11 +79,11 @@ fn add(init: &mut HashMap<&str, bool>, gates: &HashMap<&str, Gate>, x: u64, y: u
     for (wire, signal) in &mut *init {
         if wire.starts_with('x') {
             let i: u32 = wire.trim_start_matches('x').parse().unwrap();
-            *signal = (x >> i) % 2 != 0;
+            *signal = !(x >> i).is_multiple_of(2);
         }
         if wire.starts_with('y') {
             let i: u32 = wire.trim_start_matches('y').parse().unwrap();
-            *signal = (y >> i) % 2 != 0;
+            *signal = !(y >> i).is_multiple_of(2);
         }
     }
     gates

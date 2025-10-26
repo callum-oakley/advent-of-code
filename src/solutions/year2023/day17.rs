@@ -46,11 +46,10 @@ fn part_(min_straight_len: u8, max_straight_len: u8, input: &str) -> u32 {
                     push(crucible);
                 }
             }
-            if crucible.straight_len < max_straight_len {
-                if let Some(crucible) = crucible.step(&city, None) {
+            if crucible.straight_len < max_straight_len
+                && let Some(crucible) = crucible.step(&city, None) {
                     push(crucible);
                 }
-            }
         },
         search::hash_filter(|crucible: &Crucible| {
             (crucible.pos, crucible.dir, crucible.straight_len)

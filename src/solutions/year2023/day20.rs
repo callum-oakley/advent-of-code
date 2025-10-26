@@ -44,13 +44,12 @@ impl Circuit<'_> {
         let mut q = VecDeque::from([("button", "broadcaster", false)]);
         while let Some((src, dst, signal)) = q.pop_front() {
             hook((src, dst, signal));
-            if let Some(module) = self.modules.get_mut(dst) {
-                if let Some(output) = module.tick(src, signal) {
+            if let Some(module) = self.modules.get_mut(dst)
+                && let Some(output) = module.tick(src, signal) {
                     for &d in &module.destinations {
                         q.push_back((dst, d, output));
                     }
                 }
-            }
         }
     }
 

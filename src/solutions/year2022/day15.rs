@@ -68,7 +68,7 @@ fn boundary_points(a: Reading, b: Reading) -> impl Iterator<Item = Vector> {
     .filter_map(|(s0, r0, s1, r1, sign0, sign1)| {
         let a = s0.y - s0.x - sign0 * r0;
         let b = s1.y + s1.x + sign1 * r1;
-        let v = Vector::new((b - a) / 2, (b + a) / 2);
+        let v = Vector::new((b - a) / 2, i64::midpoint(b, a));
         if (b + a) % 2 == 0 && (v - s0).abs().sum() == r0 && (v - s1).abs().sum() == r1 {
             Some(v)
         } else {

@@ -102,7 +102,7 @@ impl State {
                     Effect::Shield => (),
                     Effect::Poison => self.boss.hp -= 3,
                     Effect::Recharge => self.player.mana += 101,
-                };
+                }
                 if *duration == 1 {
                     None
                 } else {

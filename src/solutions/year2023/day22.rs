@@ -41,11 +41,10 @@ fn supports(
 ) -> HashSet<usize> {
     let mut res = HashSet::new();
     for &cube in &bricks[&i] {
-        if let Some(&j) = cubes.get(&(cube + UP)) {
-            if j != i {
+        if let Some(&j) = cubes.get(&(cube + UP))
+            && j != i {
                 res.insert(j);
             }
-        }
     }
     res
 }
@@ -57,11 +56,10 @@ fn supported_by(
 ) -> HashSet<usize> {
     let mut res = HashSet::new();
     for &cube in &bricks[&i] {
-        if let Some(&j) = cubes.get(&(cube - UP)) {
-            if j != i {
+        if let Some(&j) = cubes.get(&(cube - UP))
+            && j != i {
                 res.insert(j);
             }
-        }
     }
     res
 }

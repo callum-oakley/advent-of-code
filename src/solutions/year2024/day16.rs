@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use crate::{
-    grid::{Grid, Turn, Vector, E, LEFT, RIGHT},
+    grid::{E, Grid, LEFT, RIGHT, Turn, Vector},
     search,
     uniq::Uniq,
 };
@@ -78,11 +78,11 @@ fn search(maze: &Grid<char>) -> impl Iterator<Item = State> + '_ {
 
 pub fn part1(input: &str) -> usize {
     let maze = Grid::parse(input, |_, c| c);
-    let res = search(&maze)
+
+    search(&maze)
         .find(|state| maze[state.pos] == 'E')
         .unwrap()
-        .score;
-    res
+        .score
 }
 
 pub fn part2(input: &str) -> usize {

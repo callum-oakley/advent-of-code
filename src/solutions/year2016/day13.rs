@@ -5,9 +5,7 @@ use crate::{
 
 fn is_open(seed: u32, v: Vector) -> bool {
     (u32::try_from(v.x * v.x + 3 * v.x + 2 * v.x * v.y + v.y + v.y * v.y).unwrap() + seed)
-        .count_ones()
-        % 2
-        == 0
+        .count_ones().is_multiple_of(2)
 }
 
 #[derive(Clone)]

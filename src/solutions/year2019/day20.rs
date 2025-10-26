@@ -26,8 +26,8 @@ fn parse(input: &str) -> Maze {
         if c == '.' {
             passages.insert(pos);
             for dir in [N, E, S, W] {
-                if let (Some(&d), Some(&e)) = (g.get(pos + dir), g.get(pos + dir * 2)) {
-                    if d.is_ascii_uppercase() && e.is_ascii_uppercase() {
+                if let (Some(&d), Some(&e)) = (g.get(pos + dir), g.get(pos + dir * 2))
+                    && d.is_ascii_uppercase() && e.is_ascii_uppercase() {
                         let label = if dir == N || dir == W { (e, d) } else { (d, e) };
                         match label {
                             ('A', 'A') => {
@@ -49,7 +49,6 @@ fn parse(input: &str) -> Maze {
                             }
                         }
                     }
-                }
             }
         }
     }

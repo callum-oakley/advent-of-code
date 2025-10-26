@@ -44,7 +44,7 @@ fn count_arrangements(
     ) -> usize {
         if groups.is_empty()
             || springs.len() < groups[0]
-            || springs[1..groups[0]].iter().any(|&spring| spring == b'.')
+            || springs[1..groups[0]].contains(&b'.')
         {
             0
         } else if springs.len() == groups[0] {

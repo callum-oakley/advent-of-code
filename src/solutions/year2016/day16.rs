@@ -11,7 +11,7 @@ fn dragon_fill(disk: usize, curve: &mut Vec<bool>) {
 fn checksum(curve: &[bool]) -> String {
     let mut res_len = curve.len();
     let mut chunk_size = 1;
-    while res_len % 2 == 0 {
+    while res_len.is_multiple_of(2) {
         res_len /= 2;
         chunk_size *= 2;
     }

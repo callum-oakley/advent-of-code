@@ -8,7 +8,7 @@ pub fn part1(input: &str) -> usize {
             _ => {
                 product.push(c);
             }
-        };
+        }
     }
     product.len()
 }

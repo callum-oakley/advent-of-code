@@ -12,7 +12,7 @@ fn parse(input: &str) -> (u64, u64) {
 fn mod_pow(a: u64, b: u64, m: u64) -> u64 {
     if b == 0 {
         1
-    } else if b % 2 == 0 {
+    } else if b.is_multiple_of(2) {
         mod_pow(a * a % m, b / 2, m)
     } else {
         a * mod_pow(a * a % m, b / 2, m) % m

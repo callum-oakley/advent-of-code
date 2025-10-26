@@ -5,7 +5,7 @@ struct Scanner {
 
 impl Scanner {
     fn caught(&self, delay: u32) -> bool {
-        (delay + self.depth) % (2 * (self.range - 1)) == 0
+        (delay + self.depth).is_multiple_of(2 * (self.range - 1))
     }
 }
 

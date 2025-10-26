@@ -50,14 +50,13 @@ fn part_(stretch_rounds: usize, input: &str) -> usize {
                 let hex = char::from_digit(digit.into(), 16).unwrap() as u8;
                 if quintuple.iter().all(|b| *b == hex) {
                     for state in &mut states[i.saturating_sub(1000)..i] {
-                        if let State::Triple(triple) = state {
-                            if *triple == digit {
+                        if let State::Triple(triple) = state
+                            && *triple == digit {
                                 // We can't count this yet, because we may yet
                                 // discover another lower index which satisfies
                                 // the criteria.
                                 *state = State::MatchingPair;
                             }
-                        }
                     }
                 }
             }

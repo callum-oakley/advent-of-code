@@ -76,7 +76,7 @@ fn part_(part: Part, input: &str) -> usize {
                     Part::Two => item %= lcm,
                 }
 
-                let j = if item % monkeys[i].test == 0 {
+                let j = if item.is_multiple_of(monkeys[i].test) {
                     monkeys[i].if_true
                 } else {
                     monkeys[i].if_false

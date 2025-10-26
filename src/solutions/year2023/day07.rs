@@ -37,7 +37,7 @@ impl Category {
             *last += jokers;
         } else {
             freqs.push(5);
-        };
+        }
 
         match freqs[..] {
             [1, 1, 1, 1, 1] => Category::HighCard,

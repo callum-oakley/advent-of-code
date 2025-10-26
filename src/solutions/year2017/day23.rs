@@ -99,7 +99,7 @@ fn is_prime(n: usize) -> bool {
         if d * d > n {
             break;
         }
-        if n % d == 0 {
+        if n.is_multiple_of(d) {
             return false;
         }
     }
