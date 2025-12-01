@@ -280,6 +280,10 @@ pub mod day24;
 pub mod day25;
 }
 
+pub mod year2025 {
+pub mod day01;
+}
+
 
         use std::collections::BTreeMap;
 
@@ -3291,6 +3295,18 @@ tests: Some(year2024::day24::tests),
 part1: Some(|input| year2024::day25::part1(input).to_string()),
 part2: None,
 tests: Some(year2024::day25::tests),
+
+                    },
+                );
+                
+
+                solutions.entry(2025).or_default().insert(
+                    1,
+                    Solution {
+                
+part1: Some(|input| year2025::day01::part1(input).to_string()),
+part2: Some(|input| year2025::day01::part2(input).to_string()),
+tests: Some(year2025::day01::tests),
 
                     },
                 );
