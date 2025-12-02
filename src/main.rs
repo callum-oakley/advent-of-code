@@ -78,10 +78,11 @@ fn run_year(year: u16, year_solutions: &BTreeMap<u8, solutions::Solution>) -> (D
 
     println!("{:\u{2500}^80}", "");
     println!(
-        "{} ** *   {: >5?}   {} / 50",
+        "{} ** *   {: >5?}   {} / {}",
         year,
         sig_figs(2, elapsed),
         stars,
+        if year <= 2024 { 50 } else { 24 }
     );
 
     (elapsed, stars)
@@ -93,11 +94,11 @@ fn run(solutions: &BTreeMap<u16, BTreeMap<u8, solutions::Solution>>) {
     let mut elapsed = Duration::new(0, 0);
     let mut stars = 0;
     let mut available = 0;
-    for (year, year_solutions) in solutions {
-        let (e, s) = run_year(*year, year_solutions);
+    for (&year, year_solutions) in solutions {
+        let (e, s) = run_year(year, year_solutions);
         elapsed += e;
         stars += s;
-        available += 50;
+        available += if year <= 2024 { 50 } else { 24 };
         println!("{:\u{2550}^80}", "");
     }
 
