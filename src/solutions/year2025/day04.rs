@@ -9,28 +9,26 @@ fn parse(input: &str) -> HashSet<Vector> {
         .collect()
 }
 
-fn accessible(rolls: &HashSet<Vector>) -> impl Iterator<Item = Vector> {
-    rolls
-        .iter()
-        .filter(|&r| r.adjacent8().filter(|a| rolls.contains(a)).count() < 4)
-        .copied()
+fn accessible(rolls: &HashSet<Vector>, roll: &Vector) -> bool {
+    roll.adjacent8().filter(|a| rolls.contains(a)).count() < 4
 }
 
 pub fn part1(input: &str) -> usize {
-    accessible(&parse(input)).count()
+    let rolls = parse(input);
+    rolls.iter().filter(|&r| accessible(&rolls, r)).count()
 }
 
 pub fn part2(input: &str) -> usize {
     let mut rolls = parse(input);
+    let mut stack: Vec<Vector> = rolls.iter().copied().collect();
 
     let mut removed = 0;
-    while let accessible = accessible(&rolls).collect::<Vec<_>>()
-        && !accessible.is_empty()
-    {
-        for a in &accessible {
-            rolls.remove(a);
+    while let Some(roll) = stack.pop() {
+        if rolls.contains(&roll) && accessible(&rolls, &roll) {
+            rolls.remove(&roll);
+            removed += 1;
+            stack.extend(roll.adjacent8().filter(|r| rolls.contains(r)));
         }
-        removed += accessible.len();
     }
 
     removed
