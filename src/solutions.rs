@@ -286,6 +286,7 @@ pub mod day02;
 pub mod day03;
 pub mod day04;
 pub mod day05;
+pub mod day06;
 }
 
 
@@ -3359,6 +3360,18 @@ tests: Some(year2025::day04::tests),
 part1: Some(|input| year2025::day05::part1(input).to_string()),
 part2: Some(|input| year2025::day05::part2(input).to_string()),
 tests: Some(year2025::day05::tests),
+
+                    },
+                );
+                
+
+                solutions.entry(2025).or_default().insert(
+                    6,
+                    Solution {
+                
+part1: Some(|input| year2025::day06::part1(input).to_string()),
+part2: Some(|input| year2025::day06::part2(input).to_string()),
+tests: Some(year2025::day06::tests),
 
                     },
                 );
