@@ -30,10 +30,13 @@ fn insert_year(solutions: &mut BTreeMap<u16, BTreeMap<u8, Solution>>, year: u16)
         Ok("") | Err(_) => {
             for entry in fs::read_dir(format!("src/solutions/year{}", year)).unwrap() {
                 let name: String = entry.unwrap().file_name().into_string().unwrap();
-                if name.len() == 8 && name.starts_with("day") && name.ends_with(".rs")
-                    && let Ok(day) = name[3..5].parse::<u8>() {
-                        insert_day(solutions, year, day);
-                    }
+                if name.len() == 8
+                    && name.starts_with("day")
+                    && name.ends_with(".rs")
+                    && let Ok(day) = name[3..5].parse::<u8>()
+                {
+                    insert_day(solutions, year, day);
+                }
             }
         }
         Ok(day) => {
@@ -49,10 +52,12 @@ fn main() {
         Ok("") | Err(_) => {
             for entry in fs::read_dir("src/solutions").unwrap() {
                 let name: String = entry.unwrap().file_name().into_string().unwrap();
-                if name.len() == 8 && name.starts_with("year")
-                    && let Ok(year) = name[4..].parse::<u16>() {
-                        insert_year(&mut solutions, year);
-                    }
+                if name.len() == 8
+                    && name.starts_with("year")
+                    && let Ok(year) = name[4..].parse::<u16>()
+                {
+                    insert_year(&mut solutions, year);
+                }
             }
         }
         Ok(year) => {
@@ -86,7 +91,7 @@ fn main() {
 
         // Clippy doesn't like the redundant to_string when the solution is
         // already a String.
-        #[expect(clippy::redundant_clone, clippy::too_many_lines)]
+        #[expect(clippy::implicit_clone, clippy::redundant_clone, clippy::too_many_lines)]
         pub fn build() -> BTreeMap<u16, BTreeMap<u8, Solution>> {{
             let mut solutions: BTreeMap<u16, BTreeMap<u8, Solution>> = BTreeMap::new();
         "

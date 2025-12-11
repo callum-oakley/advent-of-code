@@ -53,11 +53,11 @@ fn part_(part: Part, input: &str) -> String {
 }
 
 pub fn part1(input: &str) -> String {
-    part_(Part::One, input).to_string()
+    part_(Part::One, input).clone()
 }
 
 pub fn part2(input: &str) -> String {
-    part_(Part::Two, input).to_string()
+    part_(Part::Two, input).clone()
 }
 
 pub fn tests() {
