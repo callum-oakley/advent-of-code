@@ -1,3 +1,4 @@
+.cargo
 .session
 .vscode/*
 !.vscode/advent-of-code.code-snippets

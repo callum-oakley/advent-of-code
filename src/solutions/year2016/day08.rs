@@ -2,7 +2,7 @@ use std::sync::LazyLock;
 
 use regex::Regex;
 
-use crate::grid::{self, Grid, Vector, E, S};
+use crate::grid::{self, E, Grid, S, Vector};
 
 enum Instruction {
     Rect(Vector),

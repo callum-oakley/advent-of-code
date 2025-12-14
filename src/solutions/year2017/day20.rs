@@ -19,9 +19,9 @@ impl From<&str> for Particle {
     fn from(s: &str) -> Self {
         let mut points = s.split(", ");
         Particle {
-            p: crate::cast::string_to_vector3(points.next().unwrap()),
-            v: crate::cast::string_to_vector3(points.next().unwrap()),
-            a: crate::cast::string_to_vector3(points.next().unwrap()),
+            p: crate::cast::str_to_vector3(points.next().unwrap()),
+            v: crate::cast::str_to_vector3(points.next().unwrap()),
+            a: crate::cast::str_to_vector3(points.next().unwrap()),
         }
     }
 }

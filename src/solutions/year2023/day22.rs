@@ -9,8 +9,8 @@ fn parse(input: &str) -> (HashMap<usize, Brick>, HashMap<Vector3, usize>) {
         .lines()
         .map(|line| {
             let (start, end) = line.split_once('~').unwrap();
-            let start: Vector3 = crate::cast::string_to_vector3(start);
-            let end: Vector3 = crate::cast::string_to_vector3(end);
+            let start: Vector3 = crate::cast::str_to_vector3(start);
+            let end: Vector3 = crate::cast::str_to_vector3(end);
             let mut brick = vec![start];
             let mut pos = start;
             while pos != end {
@@ -42,9 +42,10 @@ fn supports(
     let mut res = HashSet::new();
     for &cube in &bricks[&i] {
         if let Some(&j) = cubes.get(&(cube + UP))
-            && j != i {
-                res.insert(j);
-            }
+            && j != i
+        {
+            res.insert(j);
+        }
     }
     res
 }
@@ -57,9 +58,10 @@ fn supported_by(
     let mut res = HashSet::new();
     for &cube in &bricks[&i] {
         if let Some(&j) = cubes.get(&(cube - UP))
-            && j != i {
-                res.insert(j);
-            }
+            && j != i
+        {
+            res.insert(j);
+        }
     }
     res
 }

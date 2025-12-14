@@ -1,4 +1,4 @@
-use crate::grid::{Adjacent, Grid, Vector, NE, NW, SE, SW, Z};
+use crate::grid::{Adjacent, Grid, NE, NW, SE, SW, Vector, Z};
 
 pub fn part1(input: &str) -> usize {
     let grid = Grid::parse(input, |_, c| c);

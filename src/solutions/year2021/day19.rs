@@ -59,7 +59,7 @@ fn parse(input: &str) -> impl Iterator<Item = Scanner> {
             scanner
                 .lines()
                 .skip(1)
-                .map(crate::cast::string_to_vector3)
+                .map(crate::cast::str_to_vector3)
                 .collect(),
         )
     })

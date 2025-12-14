@@ -8,11 +8,13 @@ use crate::{get_input, vm_2018};
 fn valid(input: &str) -> impl Iterator<Item = usize> {
     let (ip, instructions) = vm_2018::parse(input);
     let mut regs = [0; 6];
-    iter::repeat_with(move || loop {
-        vm_2018::apply(instructions[regs[ip]], &mut regs);
-        regs[ip] += 1;
-        if regs[ip] == 28 {
-            return regs[5];
+    iter::repeat_with(move || {
+        loop {
+            vm_2018::apply(instructions[regs[ip]], &mut regs);
+            regs[ip] += 1;
+            if regs[ip] == 28 {
+                return regs[5];
+            }
         }
     })
 }

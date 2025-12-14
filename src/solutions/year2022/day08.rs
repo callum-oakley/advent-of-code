@@ -1,4 +1,4 @@
-use crate::grid::{Grid, Vector, E, N, S, W};
+use crate::grid::{E, Grid, N, S, Vector, W};
 
 fn line_of_sight(g: &Grid<u8>, start: Vector, dir: Vector) -> impl Iterator<Item = u8> {
     std::iter::successors(Some(start + dir), move |v| Some(v + dir))

@@ -11,7 +11,7 @@ struct Machine {
 
 fn parse(input: &str) -> impl Iterator<Item = Machine> + '_ {
     input.trim().split("\n\n").map(|s| {
-        let mut vectors = s.lines().map(crate::cast::string_to_vector);
+        let mut vectors = s.lines().map(crate::cast::str_to_vector);
         Machine {
             a: vectors.next().unwrap(),
             b: vectors.next().unwrap(),

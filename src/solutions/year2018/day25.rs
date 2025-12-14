@@ -4,7 +4,7 @@ use crate::grid::Vector4;
 
 pub fn part1(input: &str) -> usize {
     let mut constellations: Vec<HashSet<Vector4>> = Vec::new();
-    for point in input.lines().map(crate::cast::string_to_vector4) {
+    for point in input.lines().map(crate::cast::str_to_vector4) {
         let mut connected = HashSet::from([point]);
         let mut i = 0;
         while i < constellations.len() {

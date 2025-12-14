@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use nalgebra::vector;
 
-use crate::grid::{Adjacent, Vector, SE};
+use crate::grid::{Adjacent, SE, Vector};
 
 #[derive(Clone, Copy)]
 struct Rectangle {
@@ -72,7 +72,7 @@ fn compress(tiles: &mut [Vector]) -> Decompressor {
 }
 
 fn parse(input: &str) -> Vec<Vector> {
-    input.lines().map(crate::cast::string_to_vector).collect()
+    input.lines().map(crate::cast::str_to_vector).collect()
 }
 
 fn rectangles(red_tiles: &[Vector]) -> Vec<Rectangle> {

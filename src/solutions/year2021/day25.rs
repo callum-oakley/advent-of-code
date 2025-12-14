@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::grid::{Vector, E, S, SE};
+use crate::grid::{E, S, SE, Vector};
 
 fn parse(input: &str) -> (HashSet<Vector>, HashSet<Vector>, Vector) {
     let mut east = HashSet::new();

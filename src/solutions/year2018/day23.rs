@@ -15,7 +15,7 @@ fn parse(input: &str) -> Vec<Bot> {
     let re = Regex::new(r"pos=<([^>]+)>, r=(\d+)").unwrap();
     re.captures_iter(input)
         .map(|captures| Bot {
-            pos: crate::cast::string_to_vector3(&captures[1]),
+            pos: crate::cast::str_to_vector3(&captures[1]),
             r: captures[2].parse().unwrap(),
         })
         .collect()

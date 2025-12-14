@@ -91,14 +91,14 @@ pub fn part2(input: &str) -> i64 {
                 State::Halt => unreachable!(),
             }
         }
-        if idle
-            && let Some(nat) = nat {
-                if let Some(last_y) = last_y
-                    && nat.1 == last_y {
-                        return last_y;
-                    }
-                last_y = Some(nat.1);
-                network.computers[0].inbox.push_back(nat);
+        if idle && let Some(nat) = nat {
+            if let Some(last_y) = last_y
+                && nat.1 == last_y
+            {
+                return last_y;
             }
+            last_y = Some(nat.1);
+            network.computers[0].inbox.push_back(nat);
+        }
     }
 }

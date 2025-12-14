@@ -56,8 +56,8 @@ fn parse(input: &str) -> Vec<Robot> {
         .map(|line| {
             let (p, v) = line.trim().split_once(' ').unwrap();
             Robot {
-                p: crate::cast::string_to_vector(p),
-                v: crate::cast::string_to_vector(v),
+                p: crate::cast::str_to_vector(p),
+                v: crate::cast::str_to_vector(v),
             }
         })
         .collect()

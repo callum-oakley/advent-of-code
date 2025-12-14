@@ -17,8 +17,8 @@ impl From<&str> for Claim {
         let captures = RE.captures(s).unwrap();
         Claim {
             id: captures[1].parse().unwrap(),
-            pos: crate::cast::string_to_vector(&captures[2]),
-            size: crate::cast::string_to_vector(&captures[3]),
+            pos: crate::cast::str_to_vector(&captures[2]),
+            size: crate::cast::str_to_vector(&captures[3]),
         }
     }
 }

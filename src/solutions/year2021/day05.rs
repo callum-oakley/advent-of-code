@@ -3,10 +3,7 @@ use crate::{freqs::Freqs, grid::Vector};
 fn parse(input: &str) -> impl Iterator<Item = (Vector, Vector)> {
     input.trim().lines().map(|line| {
         let (s, t) = line.split_once("->").unwrap();
-        (
-            crate::cast::string_to_vector(s),
-            crate::cast::string_to_vector(t),
-        )
+        (crate::cast::str_to_vector(s), crate::cast::str_to_vector(t))
     })
 }
 

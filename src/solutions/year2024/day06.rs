@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use crate::{
-    grid::{Grid, Vector, N, RIGHT},
+    grid::{Grid, N, RIGHT, Vector},
     uniq::Uniq,
 };
 

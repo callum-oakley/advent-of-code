@@ -1,7 +1,7 @@
 use std::{collections::HashMap, sync::LazyLock};
 
 use crate::{
-    grid::{Adjacent, Bounds, Grid, Vector, E, N, S, W, Z},
+    grid::{Adjacent, Bounds, E, Grid, N, S, Vector, W, Z},
     uniq::Uniq,
 };
 

@@ -1,6 +1,6 @@
 use std::collections::{HashMap, HashSet};
 
-use crate::grid::{Grid, Vector, E, S, W};
+use crate::grid::{E, Grid, S, Vector, W};
 
 enum Tile {
     Splitter,

@@ -1,6 +1,6 @@
 use std::collections::{HashMap, HashSet};
 
-use crate::grid::{Adjacent, Bounds, Vector, E, N, NE, NW, S, SE, SW, W};
+use crate::grid::{Adjacent, Bounds, E, N, NE, NW, S, SE, SW, Vector, W};
 
 fn step(round: usize, elves: &HashSet<Vector>) -> HashSet<Vector> {
     let dirs = [(NW, N, NE), (SE, S, SW), (SW, W, NW), (NE, E, SE)];
@@ -32,7 +32,7 @@ fn step(round: usize, elves: &HashSet<Vector>) -> HashSet<Vector> {
 }
 
 pub fn part1(input: &str) -> usize {
-    let mut elves = crate::cast::string_to_vector_hash_set(input);
+    let mut elves = crate::cast::str_to_vector_hash_set(input);
     for round in 0..10 {
         elves = step(round, &elves);
     }
@@ -41,7 +41,7 @@ pub fn part1(input: &str) -> usize {
 }
 
 pub fn part2(input: &str) -> usize {
-    let mut elves = crate::cast::string_to_vector_hash_set(input);
+    let mut elves = crate::cast::str_to_vector_hash_set(input);
     let mut round = 0;
     loop {
         let elves_next = step(round, &elves);

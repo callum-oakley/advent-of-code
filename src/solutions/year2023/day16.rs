@@ -1,5 +1,5 @@
 use crate::{
-    grid::{Grid, Turn, Vector, E, LEFT, N, RIGHT, S, W, Z},
+    grid::{E, Grid, LEFT, N, RIGHT, S, Turn, Vector, W, Z},
     search,
     uniq::Uniq,
 };

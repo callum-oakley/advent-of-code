@@ -1,7 +1,7 @@
 use std::{cell::RefCell, collections::HashMap};
 
 use crate::{
-    grid::{Adjacent, Vector, N, W, Z},
+    grid::{Adjacent, N, Vector, W, Z},
     search,
 };
 
@@ -70,7 +70,7 @@ fn parse(input: &str) -> Cave {
     let (depth, target) = input.split_once('\n').unwrap();
     Cave {
         depth: depth.strip_prefix("depth: ").unwrap().parse().unwrap(),
-        target: crate::cast::string_to_vector(target.strip_prefix("target: ").unwrap()),
+        target: crate::cast::str_to_vector(target.strip_prefix("target: ").unwrap()),
         erosion_cache: RefCell::new(HashMap::new()),
     }
 }

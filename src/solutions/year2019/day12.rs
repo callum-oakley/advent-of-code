@@ -12,7 +12,7 @@ fn parse(input: &str) -> Vec<Moon> {
     input
         .lines()
         .map(|line| Moon {
-            pos: crate::cast::string_to_vector3(line),
+            pos: crate::cast::str_to_vector3(line),
             vel: Vector3::zeros(),
         })
         .collect()

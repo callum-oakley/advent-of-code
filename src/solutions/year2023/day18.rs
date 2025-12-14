@@ -2,7 +2,7 @@ use std::sync::LazyLock;
 
 use regex::Regex;
 
-use crate::grid::{Vector, E, N, S, W, Z};
+use crate::grid::{E, N, S, Vector, W, Z};
 
 static RE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"([UDLR]) (\d+) \(#([0-9a-f]{5})([0-3])\)").unwrap());
@@ -10,7 +10,7 @@ static RE: LazyLock<Regex> =
 fn parse1(input: &str) -> impl Iterator<Item = (Vector, i64)> + '_ {
     RE.captures_iter(input).map(|captures| {
         (
-            crate::cast::string_to_vector(&captures[1]),
+            crate::cast::str_to_vector(&captures[1]),
             captures[2].parse().unwrap(),
         )
     })

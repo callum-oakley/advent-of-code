@@ -160,6 +160,7 @@ fn main() {
     .unwrap();
 
     Command::new("rustfmt")
+        .arg("--edition=2024")
         .arg("src/solutions.rs")
         .output()
         .unwrap();

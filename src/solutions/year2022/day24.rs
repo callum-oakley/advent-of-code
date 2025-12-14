@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::grid::{Adjacent, Grid, Vector, NW};
+use crate::grid::{Adjacent, Grid, NW, Vector};
 
 struct Blizzard {
     pos: Vector,

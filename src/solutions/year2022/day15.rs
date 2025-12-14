@@ -13,8 +13,8 @@ fn parse(input: &str) -> Vec<Reading> {
         .unwrap()
         .captures_iter(input)
         .map(|captures| Reading {
-            sensor: crate::cast::string_to_vector(&captures[1]),
-            beacon: crate::cast::string_to_vector(&captures[2]),
+            sensor: crate::cast::str_to_vector(&captures[1]),
+            beacon: crate::cast::str_to_vector(&captures[2]),
         })
         .collect()
 }

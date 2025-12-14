@@ -6,7 +6,10 @@ fn parse_wire(s: &str) -> impl Iterator<Item = Vector> + '_ {
     s.split(',')
         .flat_map(|instruction| {
             let (dir, n) = instruction.split_at(1);
-            std::iter::repeat_n(crate::cast::char_to_vector(dir.chars().next().unwrap()), n.parse().unwrap())
+            std::iter::repeat_n(
+                crate::cast::char_to_vector(dir.chars().next().unwrap()),
+                n.parse().unwrap(),
+            )
         })
         .scan(Z, |pos, dir| {
             *pos += dir;

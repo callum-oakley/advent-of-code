@@ -8,7 +8,7 @@ fn parse(input: &str) -> HashSet<Vector3> {
     input
         .trim()
         .lines()
-        .map(crate::cast::string_to_vector3)
+        .map(crate::cast::str_to_vector3)
         .collect()
 }
 

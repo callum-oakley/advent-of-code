@@ -1,5 +1,5 @@
 use crate::{
-    grid::{Grid, Vector, NW},
+    grid::{Grid, NW, Vector},
     part::Part,
 };
 

@@ -7,11 +7,7 @@ fn parse(input: &str) -> Vec<usize> {
 
 fn play(cups: Vec<usize>, moves: usize) -> Vec<usize> {
     fn wrapping_pred(n: usize, max: usize) -> usize {
-        if n == 0 {
-            max
-        } else {
-            n - 1
-        }
+        if n == 0 { max } else { n - 1 }
     }
 
     let mut next = vec![0; cups.len()];

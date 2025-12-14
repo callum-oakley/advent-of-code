@@ -1,5 +1,5 @@
 use crate::{
-    grid::{Vector, E, N, S, W, Z},
+    grid::{E, N, S, Vector, W, Z},
     intcode::VM,
     search,
 };

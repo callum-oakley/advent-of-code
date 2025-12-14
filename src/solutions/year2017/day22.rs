@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::grid::{Grid, Vector, LEFT, N, RIGHT};
+use crate::grid::{Grid, LEFT, N, RIGHT, Vector};
 
 trait State {
     fn tick(&mut self, dir: &mut Vector, infected_count: &mut usize);

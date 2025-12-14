@@ -3,7 +3,7 @@ use std::{collections::HashMap, sync::LazyLock};
 use nalgebra::vector;
 use regex::Regex;
 
-use crate::grid::{Turn, Vector, E, N, S, SE, W};
+use crate::grid::{E, N, S, SE, Turn, Vector, W};
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 enum Tile {
@@ -45,7 +45,7 @@ fn parse(input: &str) -> (HashMap<Vector, Tile>, impl Iterator<Item = Instructio
     let instructions = INSTRUCTION.find_iter(instructions).map(|m| {
         let m = m.as_str();
         match m {
-            "L" | "R" => Instruction::Turn(crate::cast::string_to_turn(m)),
+            "L" | "R" => Instruction::Turn(crate::cast::str_to_turn(m)),
             _ => Instruction::Forward(m.parse().unwrap()),
         }
     });

@@ -31,7 +31,7 @@ fn part2_(window_size: usize, numbers: &[u64]) -> u64 {
                 i += 1;
             }
             Ordering::Equal => {
-                return numbers[i..j].iter().min().unwrap() + numbers[i..j].iter().max().unwrap()
+                return numbers[i..j].iter().min().unwrap() + numbers[i..j].iter().max().unwrap();
             }
         }
     }

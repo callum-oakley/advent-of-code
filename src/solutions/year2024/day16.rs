@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use crate::{
-    grid::{Grid, Turn, Vector, E, LEFT, RIGHT},
+    grid::{E, Grid, LEFT, RIGHT, Turn, Vector},
     search,
     uniq::Uniq,
 };

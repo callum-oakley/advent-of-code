@@ -4,11 +4,7 @@ fn fuel1(mass: i32) -> i32 {
 
 fn fuel2(mass: i32) -> i32 {
     let fuel = fuel1(mass);
-    if fuel <= 0 {
-        0
-    } else {
-        fuel + fuel2(fuel)
-    }
+    if fuel <= 0 { 0 } else { fuel + fuel2(fuel) }
 }
 
 pub fn part1(input: &str) -> i32 {

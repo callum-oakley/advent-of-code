@@ -27,8 +27,8 @@ fn parse(s: &str) -> impl Iterator<Item = Instruction> + '_ {
             "toggle" => Op::Toggle,
             _ => unreachable!(),
         },
-        from: crate::cast::string_to_vector(&captures[2]),
-        to: crate::cast::string_to_vector(&captures[3]),
+        from: crate::cast::str_to_vector(&captures[2]),
+        to: crate::cast::str_to_vector(&captures[3]),
     })
 }
 

@@ -3,7 +3,7 @@ use std::{
     sync::LazyLock,
 };
 
-use crate::grid::{Vector, E, N, S};
+use crate::grid::{E, N, S, Vector};
 
 static ROCKS: LazyLock<Vec<Vec<Vector>>> = LazyLock::new(|| {
     "####\n\n.#.\n###\n.#.\n\n..#\n..#\n###\n\n#\n#\n#\n#\n\n##\n##"

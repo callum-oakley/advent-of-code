@@ -1,4 +1,4 @@
-use nalgebra::{matrix, vector, Vector2, Vector3};
+use nalgebra::{Vector2, Vector3, matrix, vector};
 
 use crate::combinatorics;
 
@@ -36,8 +36,8 @@ fn parse(input: &str) -> impl Iterator<Item = Stone> + '_ {
     input.trim().lines().map(|l| {
         let (p, v) = l.split_once('@').unwrap();
         Stone {
-            p: Vector3::from_iterator(crate::cast::string_to_ints(p)),
-            v: Vector3::from_iterator(crate::cast::string_to_ints(v)),
+            p: Vector3::from_iterator(crate::cast::str_to_ints(p)),
+            v: Vector3::from_iterator(crate::cast::str_to_ints(v)),
         }
     })
 }

@@ -24,7 +24,7 @@ fn unique_closest(pos: Vector, coordinates: &[Vector]) -> Option<Vector> {
 pub fn part1(input: &str) -> u32 {
     let coordinates = input
         .lines()
-        .map(crate::cast::string_to_vector)
+        .map(crate::cast::str_to_vector)
         .collect::<Vec<_>>();
 
     let mut areas = coordinates
@@ -53,7 +53,7 @@ pub fn part1(input: &str) -> u32 {
 fn part2_(tolerance: i64, input: &str) -> u32 {
     let coordinates = input
         .lines()
-        .map(crate::cast::string_to_vector)
+        .map(crate::cast::str_to_vector)
         .collect::<Vec<_>>();
 
     let mut res = 0;

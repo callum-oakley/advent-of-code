@@ -19,3 +19,4 @@ rand = "0.9.2"
 regex = "1"
 reqwest = { version = "0.12", features = ["blocking"] }
 serde_json = "1"
+z3 = "0.19.6"

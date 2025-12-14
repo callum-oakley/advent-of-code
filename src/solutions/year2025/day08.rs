@@ -12,7 +12,7 @@ fn parse(input: &str) -> Vec<Vector3> {
     input
         .trim()
         .lines()
-        .map(crate::cast::string_to_vector3)
+        .map(crate::cast::str_to_vector3)
         .collect()
 }
 

@@ -11,7 +11,7 @@ fn parse(input: &str) -> impl Iterator<Item = Motion> {
     input.lines().map(|line| {
         let (dir, dist) = line.split_once(' ').unwrap();
         Motion {
-            dir: crate::cast::string_to_vector(dir),
+            dir: crate::cast::str_to_vector(dir),
             dist: dist.parse().unwrap(),
         }
     })

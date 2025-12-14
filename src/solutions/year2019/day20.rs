@@ -1,7 +1,7 @@
 use std::collections::{HashMap, HashSet};
 
 use crate::{
-    grid::{Adjacent, Grid, Vector, E, N, S, W},
+    grid::{Adjacent, E, Grid, N, S, Vector, W},
     search,
 };
 
@@ -27,28 +27,30 @@ fn parse(input: &str) -> Maze {
             passages.insert(pos);
             for dir in [N, E, S, W] {
                 if let (Some(&d), Some(&e)) = (g.get(pos + dir), g.get(pos + dir * 2))
-                    && d.is_ascii_uppercase() && e.is_ascii_uppercase() {
-                        let label = if dir == N || dir == W { (e, d) } else { (d, e) };
-                        match label {
-                            ('A', 'A') => {
-                                start = Some(pos);
-                            }
-                            ('Z', 'Z') => {
-                                finish = Some(pos);
-                            }
-                            _ => {
-                                if pos.y == 2
-                                    || pos.y == g.size.y - 3
-                                    || pos.x == 2
-                                    || pos.x == g.size.x - 3
-                                {
-                                    outer_portals.insert(label, pos);
-                                } else {
-                                    inner_portals.insert(label, pos);
-                                }
+                    && d.is_ascii_uppercase()
+                    && e.is_ascii_uppercase()
+                {
+                    let label = if dir == N || dir == W { (e, d) } else { (d, e) };
+                    match label {
+                        ('A', 'A') => {
+                            start = Some(pos);
+                        }
+                        ('Z', 'Z') => {
+                            finish = Some(pos);
+                        }
+                        _ => {
+                            if pos.y == 2
+                                || pos.y == g.size.y - 3
+                                || pos.x == 2
+                                || pos.x == g.size.x - 3
+                            {
+                                outer_portals.insert(label, pos);
+                            } else {
+                                inner_portals.insert(label, pos);
                             }
                         }
                     }
+                }
             }
         }
     }

@@ -1,7 +1,7 @@
 use std::ops::Div;
 
 use crate::{
-    grid::{Adjacent, Grid, Vector, NW, Z},
+    grid::{Adjacent, Grid, NW, Vector, Z},
     search,
 };
 

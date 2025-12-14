@@ -1,7 +1,7 @@
 use std::collections::{BTreeSet, HashMap};
 
 use crate::{
-    grid::{Adjacent, Grid, Vector, E, N, NE, NW, S, SE, SW, W, Z},
+    grid::{Adjacent, E, Grid, N, NE, NW, S, SE, SW, Vector, W, Z},
     search,
 };
 

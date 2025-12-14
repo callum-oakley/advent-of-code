@@ -5,7 +5,7 @@ use regex::Regex;
 
 use crate::grid::{Bounds, E, Grid, LEFT, N, RIGHT, S, Turn, Vector, Vector3, Vector4, W, Z};
 
-pub fn string_to_ints<N>(s: &str) -> impl Iterator<Item = N>
+pub fn str_to_ints<N>(s: &str) -> impl Iterator<Item = N>
 where
     N: std::str::FromStr,
     N::Err: std::fmt::Debug,
@@ -14,20 +14,20 @@ where
     INTS.find_iter(s).map(|m| m.as_str().parse().unwrap())
 }
 
-pub fn string_to_vector(s: &str) -> Vector {
+pub fn str_to_vector(s: &str) -> Vector {
     if s.len() == 1 {
         char_to_vector(s.chars().next().unwrap())
     } else {
-        Vector::from_iterator(string_to_ints(s))
+        Vector::from_iterator(str_to_ints(s))
     }
 }
 
-pub fn string_to_vector3(s: &str) -> Vector3 {
-    Vector3::from_iterator(crate::cast::string_to_ints(s))
+pub fn str_to_vector3(s: &str) -> Vector3 {
+    Vector3::from_iterator(str_to_ints(s))
 }
 
-pub fn string_to_vector4(s: &str) -> Vector4 {
-    Vector4::from_iterator(crate::cast::string_to_ints(s))
+pub fn str_to_vector4(s: &str) -> Vector4 {
+    Vector4::from_iterator(str_to_ints(s))
 }
 
 pub fn char_to_vector(c: char) -> Vector {
@@ -56,7 +56,7 @@ pub fn vector_to_char(v: Vector) -> char {
     }
 }
 
-pub fn string_to_turn(s: &str) -> Turn {
+pub fn str_to_turn(s: &str) -> Turn {
     char_to_turn(s.chars().next().unwrap())
 }
 
@@ -79,7 +79,7 @@ pub fn bool_grid_to_string(g: &Grid<bool>) -> String {
     res
 }
 
-pub fn string_to_vector_hash_set(s: &str) -> HashSet<Vector> {
+pub fn str_to_vector_hash_set(s: &str) -> HashSet<Vector> {
     crate::grid::scan(s)
         .filter(|&(_, c)| c == '#')
         .map(|(v, _)| v)

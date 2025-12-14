@@ -15,7 +15,7 @@ fn parse(input: &str) -> (HashSet<Vector>, impl Iterator<Item = Fold> + '_) {
     let (dots, folds) = input.split_once("\n\n").unwrap();
     (
         dots.split_whitespace()
-            .map(crate::cast::string_to_vector)
+            .map(crate::cast::str_to_vector)
             .collect(),
         RE.captures_iter(folds).map(|captures| Fold {
             axis: match &captures[1] {

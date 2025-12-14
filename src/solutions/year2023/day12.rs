@@ -42,10 +42,7 @@ fn count_arrangements(
         springs: &[u8],
         groups: &[usize],
     ) -> usize {
-        if groups.is_empty()
-            || springs.len() < groups[0]
-            || springs[1..groups[0]].contains(&b'.')
-        {
+        if groups.is_empty() || springs.len() < groups[0] || springs[1..groups[0]].contains(&b'.') {
             0
         } else if springs.len() == groups[0] {
             count_arrangements(cache, &springs[groups[0]..], &groups[1..])

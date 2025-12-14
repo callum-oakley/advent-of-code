@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use crate::{
-    grid::{Adjacent, Grid, Vector, E, N, NE, NW, S, SE, SW, W},
+    grid::{Adjacent, E, Grid, N, NE, NW, S, SE, SW, Vector, W},
     search,
 };
 

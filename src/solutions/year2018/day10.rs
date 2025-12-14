@@ -14,8 +14,8 @@ fn parse(input: &str) -> Vec<Light> {
         .unwrap()
         .captures_iter(input)
         .map(|captures| Light {
-            position: crate::cast::string_to_vector(&captures[1]),
-            velocity: crate::cast::string_to_vector(&captures[2]),
+            position: crate::cast::str_to_vector(&captures[1]),
+            velocity: crate::cast::str_to_vector(&captures[2]),
         })
         .collect()
 }

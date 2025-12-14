@@ -51,12 +51,13 @@ fn part_(stretch_rounds: usize, input: &str) -> usize {
                 if quintuple.iter().all(|b| *b == hex) {
                     for state in &mut states[i.saturating_sub(1000)..i] {
                         if let State::Triple(triple) = state
-                            && *triple == digit {
-                                // We can't count this yet, because we may yet
-                                // discover another lower index which satisfies
-                                // the criteria.
-                                *state = State::MatchingPair;
-                            }
+                            && *triple == digit
+                        {
+                            // We can't count this yet, because we may yet
+                            // discover another lower index which satisfies
+                            // the criteria.
+                            *state = State::MatchingPair;
+                        }
                     }
                 }
             }

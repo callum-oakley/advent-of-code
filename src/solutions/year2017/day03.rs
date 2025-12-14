@@ -1,6 +1,6 @@
 use std::{collections::HashMap, iter};
 
-use crate::grid::{Adjacent, Vector, E, N, S, W, Z};
+use crate::grid::{Adjacent, E, N, S, Vector, W, Z};
 
 fn spiral() -> impl Iterator<Item = Vector> {
     let mut v = W;

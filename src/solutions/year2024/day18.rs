@@ -8,7 +8,7 @@ use crate::{
 fn parse(input: &str) -> Vec<Vector> {
     input
         .split_whitespace()
-        .map(crate::cast::string_to_vector)
+        .map(crate::cast::str_to_vector)
         .collect()
 }
 

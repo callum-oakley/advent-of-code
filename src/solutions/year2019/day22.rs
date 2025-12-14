@@ -1,4 +1,4 @@
-use num::{traits::Euclid, BigInt};
+use num::{BigInt, traits::Euclid};
 
 // We can represent each step of the shuffle as a linear map
 //
