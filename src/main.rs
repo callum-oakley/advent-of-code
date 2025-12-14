@@ -71,8 +71,8 @@ fn run_year(year: u16, year_solutions: &BTreeMap<u8, solutions::Solution>) -> (D
         stars += s;
     }
 
-    if stars == 49 {
-        // day 25 part 2
+    if year <= 2024 && stars == 49 || year >= 2025 && stars == 23 {
+        // Final star is free.
         stars += 1;
     }
 
